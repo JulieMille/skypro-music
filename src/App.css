@@ -18,6 +18,10 @@ a:visited {
   cursor: pointer;
 }
 
+.App {
+  background-color: black;
+}
+
 button,
 ._btn {
   cursor: pointer;
@@ -45,10 +49,13 @@ body {
 }
 
 .wrapper {
-  width: 100%;
+  width: 1920px;
+  /* Changed here */
   min-height: 100%;
   overflow: hidden;
-  background-color: #383838;
+  overflow-y: scroll;
+  /* overflow-x: scroll; */
+  background-color: #181818;
 }
 
 .container {
@@ -102,4 +109,6 @@ body {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  flex-direction: row;
+  /* width: 2000px; */
 }

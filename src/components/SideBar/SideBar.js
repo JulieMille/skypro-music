@@ -1,4 +1,5 @@
 import './SideBar.css';
+// import playlist01 from '../../../public/img/playlist01.png'
 
 function SideBar() {
     return (
@@ -7,7 +8,7 @@ function SideBar() {
                 <p className="sidebar__personal-name">Sergey.Ivanov</p>
                 <div className="sidebar__icon">
                   <svg alt="logout">
-                    <use xlinkHref="img/icon/sprite.svg#logout"></use>
+                    <use xlinkHref="../../../img/icon/sprite.svg#logout"></use>
                   </svg>
                 </div>
               </div>
@@ -17,7 +18,7 @@ function SideBar() {
                     <a className="sidebar__link" href="#">
                       <img
                         className="sidebar__img"
-                        src="img/playlist01.png"
+                        src="../../../img/playlist01.png"
                         alt="day's playlist"
                       />
                     </a>
@@ -26,7 +27,7 @@ function SideBar() {
                     <a className="sidebar__link" href="#">
                       <img
                         className="sidebar__img"
-                        src="img/playlist02.png"
+                        src="../../../img/playlist02.png"
                         alt="day's playlist"
                       />
                     </a>
@@ -35,7 +36,7 @@ function SideBar() {
                     <a className="sidebar__link" href="#">
                       <img
                         className="sidebar__img"
-                        src="img/playlist03.png"
+                        src="../../../img/playlist03.png"
                         alt="day's playlist"
                       />
                     </a>
