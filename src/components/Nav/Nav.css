@@ -61,6 +61,15 @@
   
   .menu__list {
     padding: 18px 0 10px 0;
+    visibility: hidden;
+  }
+
+  /* .nav__burger:hover .menu__list {
+    visibility: visible;
+  } */
+
+  .nav__burger:hover + .nav__menu .menu__list {
+    visibility: visible;
   }
   
   .menu__item {
