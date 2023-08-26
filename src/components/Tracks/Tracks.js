@@ -1,7 +1,7 @@
 import './Tracks.css';
 import Track from '../Track/Track.js';
 
-function Tracks() {
+function Tracks({ isLoading }) {
     return (
         <div className="centerblock__content">
                 <div className="content__title playlist-title">
@@ -15,61 +15,61 @@ function Tracks() {
                   </div>
                 </div>
                 <div className="content__playlist playlist">
-                <Track
+                <Track isLoading={isLoading}
                   track="Guilt"
                   artist="Nero"
                   album="Welcome Reality"
                  time="4:44"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Elektro"
                   artist="Dynoro, Outwork, Mr. Gee"
                   album="Elektro"
                   time="2:22"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Guilt"
                   artist="Nero"
                   album="Welcome Reality"
                   time="4:44"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Elektro"
                   artist="Dynoro, Outwork, Mr. Gee"
                   album="Elektro"
                  time="2:22"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Guilt"
                   artist="Nero"
                   album="Welcome Reality"
                   time="4:44"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Elektro"
                   artist="Dynoro, Outwork, Mr. Gee"
                   album="Elektro"
                   time="2:22"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Guilt"
                   artist="Nero"
                   album="Welcome Reality"
                   time="4:44"
                 />
-                <Track
+                <Track isLoading={isLoading}
                   track="Elektro"
                   artist="Dynoro, Outwork, Mr. Gee"
                   album="Elektro"
                   time="2:22"
                 />
-                <Track
+                <Track isLoading={isLoading}
                  track="Guilt"
                   artist="Nero"
                   album="Welcome Reality"
                   time="4:44"
                 />
-                <Track
+                <Track isLoading={isLoading}
                  track="Elektro"
                   artist="Dynoro, Outwork, Mr. Gee"
                   album="Elektro"

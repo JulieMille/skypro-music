@@ -1,10 +1,22 @@
+import { useState } from 'react';
 import './Track.css';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
-export default function Track({ track, album, artist, time }) {
+export default function Track({ isLoading, track, album, artist, time }) {
     return (
         <div className="playlist__item">
                     <div className="playlist__track track">
-                      <div className="track__title">
+                    {isLoading ? (
+            <>
+              <Skeleton width={51} height={51} baseColor='#2f3030' /> 
+              <Skeleton width={380} height={25} baseColor='#2f3030' style={{ margin: '5px' }} /> 
+              <Skeleton width={320} height={25} baseColor='#2f3030' style={{ margin: '7px' }} /> 
+              <Skeleton width={300} height={25} baseColor='#2f3030' style={{ margin: '7px' }} />  
+            </>
+          ) : (
+            <>
+            <div className="track__title">
                         <div className="track__title-image">
                           <svg className="track__title-svg" alt="music">
                             <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
@@ -27,7 +39,9 @@ export default function Track({ track, album, artist, time }) {
                         </svg>
                         <span className="track__time-text">{time}</span>
                       </div>
-                    </div>
-                  </div>
-    )
+                      </>)}
+              
+      </div>
+    </div>
+  );
 }

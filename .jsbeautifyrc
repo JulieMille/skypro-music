@@ -1,0 +1,10 @@
+{
+    "indent_size": 2,
+    "indent_char": " ",
+    "brace_style": "expand",
+    "end_with_newline": true,
+    "jsx": {
+      "indent_size": 2,
+      "brace_style": "collapse"
+    }
+  }
