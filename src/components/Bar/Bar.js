@@ -1,6 +1,8 @@
 import './Bar.css';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
-function Bar() {
+function Bar({ isLoading }) {
     return (
         <div className="bar">
             <div className="bar__content">
@@ -37,21 +39,34 @@ function Bar() {
 
                   <div className="player__track-play track-play">
                     <div className="track-play__contain">
+
+                    {isLoading ? (
+            <>
+              <Skeleton width={51} height={51} baseColor='#2f3030' style={{ 'grid-area': 'image', 'margin-right': '12px' }} /> 
+              <div className="track-play__wrapper">
+              <Skeleton width={49} height={10} baseColor='#2f3030' style={{ 'grid-area': 'author', margin: '1px' }} /> 
+              <Skeleton width={49} height={10} baseColor='#2f3030' style={{ 'grid-area': 'album', margin: '1px' }} />
+              </div>  
+            </>
+          ) : (
+            <>
                       <div className="track-play__image">
                         <svg className="track-play__svg" alt="music">
                           <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
                         </svg>
                       </div>
+                      <div className="track-play__wrapper">
                       <div className="track-play__author">
-                        <a className="track-play__author-link" href="http://"
-                          >Ты та...</a
-                        >
+                        <a className="track-play__author-link" href="http://">Ты та...</a>
                       </div>
                       <div className="track-play__album">
                         <a className="track-play__album-link" href="http://">Баста</a>
                       </div>
-                    </div>
+                      </div>
+                  
+                    </>)}
 
+                    </div>
                     <div className="track-play__like-dis">
                       <div className="track-play__like _btn-icon">
                         <svg className="track-play__like-svg" alt="like">

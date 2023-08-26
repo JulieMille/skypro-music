@@ -160,13 +160,18 @@
 .track-play__contain {
     width: auto;
     display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: auto 1fr;
+    display: flex;
+    /* -ms-grid-columns: auto 1fr;
     grid-template-columns: auto 1fr;
-    grid-template-areas: "image author" "image album";
+    grid-template-areas: "image author" "image album"; */
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+  }
+
+  .track-play__wrapper {
+    display: flex;
+    flex-direction: column;
   }
   
   .track-play__image {

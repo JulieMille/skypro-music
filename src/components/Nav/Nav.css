@@ -68,7 +68,7 @@
     visibility: visible;
   } */
 
-  .nav__burger:hover + .nav__menu .menu__list {
+  .menu__list_open {
     visibility: visible;
   }
   
