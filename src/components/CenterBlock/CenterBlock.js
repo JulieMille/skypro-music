@@ -1,16 +1,17 @@
-import './CenterBlock.css';
 import Search from '../Search/Search'
 import Filter from '../Filter/Filter'
 import Tracks from '../Tracks/Tracks'
+import * as S from './Centerblock.styles'
+
 
 function CenterBlock({ isLoading }) {
     return (
-        <div className="main__centerblock centerblock">
+        <S.MainCenterblock>
               <Search/>
-              <h2 className="centerblock__h2">Треки</h2>
+              <S.CenterblockH2>Треки</S.CenterblockH2>
               <Filter/>
               <Tracks isLoading={isLoading}/>
-            </div>
+            </S.MainCenterblock>
     )
 }
 

@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import './Track.css';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import * as S from './Track.styles';
 
 export default function Track({ isLoading, track, album, artist, time }) {
     return (
-        <div className="playlist__item">
-                    <div className="playlist__track track">
+        <S.PlaylistItem>
+                    <S.PlaylistTrack>
                     {isLoading ? (
             <>
               <Skeleton width={51} height={51} baseColor='#2f3030' /> 
@@ -16,32 +16,33 @@ export default function Track({ isLoading, track, album, artist, time }) {
             </>
           ) : (
             <>
-            <div className="track__title">
-                        <div className="track__title-image">
-                          <svg className="track__title-svg" alt="music">
-                            <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-                          </svg>
-                        </div>
-                        <div className="track__title-text">
-                          <a className="track__title-link" href="http://">{track}
-                            <span className="track__title-span"></span></a>
-                        </div>
-                      </div>
-                      <div className="track__author">
-                        <a className="track__author-link" href="http://">{artist}</a>
-                      </div>
-                      <div className="track__album">
-                        <a className="track__album-link" href="http://">{album}</a>
-                      </div>
-                      <div className="track__time">
-                        <svg className="track__time-svg" alt="time">
-                          <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                        </svg>
-                        <span className="track__time-text">{time}</span>
-                      </div>
-                      </>)}
+            <S.TrackTitle>
+              <S.TrackTitleImg>
+                <S.TrackTitleSvg alt="music">
+                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                </S.TrackTitleSvg>
+              </S.TrackTitleImg>
+              <S.TrackTitleText>
+                <S.TrackTitleLink href="http://">{track}
+                  <S.TrackTitleSpan></S.TrackTitleSpan>
+                </S.TrackTitleLink>
+              </S.TrackTitleText>
+            </S.TrackTitle>
+            <S.TrackAuthor>
+              <S.TrackAuthorLink href="http://">{artist}</S.TrackAuthorLink>
+            </S.TrackAuthor>
+            <S.TrackAlbum>
+              <S.TrackAlbumLink href="http://">{album}</S.TrackAlbumLink>
+            </S.TrackAlbum>
+            <S.TrackTime>
+              <S.TrackTimeSvg alt="time">
+                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              </S.TrackTimeSvg>
+              <S.TrackTimeText>{time}</S.TrackTimeText>
+            </S.TrackTime>
+            </>)}
               
-      </div>
-    </div>
+      </S.PlaylistTrack>
+    </S.PlaylistItem>
   );
 }
