@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import './Filter.css';
 import classNames from 'classnames';
+import * as S from './Filter.styles'
 
 function Filter() {
     const [isAuthorOpen, setIsAuthorOpen] = useState(false);
@@ -38,42 +38,51 @@ function Filter() {
     }
 
     return (
-        <div className="centerblock__filter filter">
-            <div className="filter__title">Искать по:</div>
-            <div className={`filter__button button-author _btn-text ${isAuthorOpen && "filter__button_active"} `} onClick={handleAuthor}>
-                исполнителю
-            </div>
-            {isAuthorOpen && <ul className="popup-menu popup-menu_author">
-                <li className="popup-menu__active">Nero</li>
-                <li className="popup-menu__active">Dynoro, Outwork, Mr. Gee</li> 
-                <li className="popup-menu__active">Nero</li>
-                <li className="popup-menu__active">Dynoro, Outwork, Mr. Gee</li>
-                <li className="popup-menu__active">Nero</li>
-                <li className="popup-menu__active">Dynoro, Outwork, Mr. Gee</li>
-                <li className="popup-menu__active">Nero</li>
-                <li className="popup-menu__active">Dynoro, Outwork, Mr. Gee</li>
-                </ul>}
-            <div className={classNames("filter__button button-year _btn-text", {
-                "filter__button_active": isYearOpen,
-                })} onClick={handleYear} >
-                году выпуска
-            </div>
-            {isYearOpen && <ul className="popup-menu popup-menu_year">
-                <li className="popup-menu__active">1995</li>
-                <li className="popup-menu__active">2002</li>
-                <li className="popup-menu__active">1993</li>
-                <li className="popup-menu__active">2000</li>
-                </ul>}
-            <div className={classNames("filter__button button-genre _btn-text", {
-                "filter__button_active": isGenreOpen,
-                })} onClick={handleGenre}>жанру</div>
-            {isGenreOpen && <ul className="popup-menu popup-menu_genre">
-                <li className="popup-menu__active">Рок</li>
-                <li className="popup-menu__active">Хип-хоп</li>
-                <li className="popup-menu__active">Поп-музыка</li>
-                <li className="popup-menu__active">Инди</li>
-                <li className="popup-menu__active">Техно</li></ul>}
-        </div>
+        <S.CenterblockFilter>
+            <S.FilterTitle>Искать по:</S.FilterTitle>
+            {isAuthorOpen ? 
+            <S.FilterButtonActive className='_btn-text' onClick={handleAuthor}>исполнителю</S.FilterButtonActive> 
+             :  
+            <S.FilterButton className='_btn-text' onClick={handleAuthor}>исполнителю</S.FilterButton>
+            }
+        
+            {isAuthorOpen && <S.PopupMenuAuthor>
+                <S.PopupMenuActive>Nero</S.PopupMenuActive>
+                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive> 
+                <S.PopupMenuActive>Nero</S.PopupMenuActive>
+                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive>
+                <S.PopupMenuActive>Nero</S.PopupMenuActive>
+                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive>
+                <S.PopupMenuActive>Nero</S.PopupMenuActive>
+                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive>
+                </S.PopupMenuAuthor>}
+
+            {isYearOpen ? 
+            <S.FilterButtonActive className='_btn-text' onClick={handleYear}>году выпуска</S.FilterButtonActive> 
+             :  
+            <S.FilterButton className='_btn-text' onClick={handleYear}>году выпуска</S.FilterButton>
+            }
+            
+            {isYearOpen && <S.PopupMenuYear>
+                <S.PopupMenuActive>1995</S.PopupMenuActive>
+                <S.PopupMenuActive>2002</S.PopupMenuActive>
+                <S.PopupMenuActive>1993</S.PopupMenuActive>
+                <S.PopupMenuActive>2000</S.PopupMenuActive>
+                </S.PopupMenuYear>}
+
+            {isGenreOpen ? 
+            <S.FilterButtonActive className='_btn-text' onClick={handleGenre}>жанру</S.FilterButtonActive> 
+             :  
+            <S.FilterButton className='_btn-text' onClick={handleGenre}>жанру</S.FilterButton>
+            }
+            
+            {isGenreOpen && <S.PopupMenuGenre>
+                <S.PopupMenuActive>Рок</S.PopupMenuActive>
+                <S.PopupMenuActive>Хип-хоп</S.PopupMenuActive>
+                <S.PopupMenuActive>Поп-музыка</S.PopupMenuActive>
+                <S.PopupMenuActive>Инди</S.PopupMenuActive>
+                <S.PopupMenuActive>Техно</S.PopupMenuActive></S.PopupMenuGenre>}
+        </S.CenterblockFilter>
     )
 }
 

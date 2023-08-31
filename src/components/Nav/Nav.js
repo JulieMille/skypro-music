@@ -1,36 +1,39 @@
 import { useState } from 'react';
-import './Nav.css';
+// import './Nav.css';
+import * as S from './Nav.styles';
+
 
 function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   function handleMenuOpen() {
     setIsMenuOpen(!isMenuOpen) 
   }
-
     return (
-        <nav className="main__nav nav">
-              <div className="nav__logo logo">
-                <img className="logo__image" src="img/logo.png" alt="logo" />
-              </div>
-              <div className="nav__burger burger" onClick={handleMenuOpen}>
-                <span className="burger__line"></span>
-                <span className="burger__line"></span>
-                <span className="burger__line"></span>
-              </div>
-              <div className="nav__menu menu">
-                <ul className={`menu__list ${isMenuOpen? "menu__list_open" : ''}`}>
-                  <li className="menu__item">
-                    <a href="#" className="menu__link">Главное</a>
-                  </li>
-                  <li className="menu__item">
-                    <a href="#" className="menu__link">Мой плейлист</a>
-                  </li>
-                  <li className="menu__item">
-                    <a href="../signin.html" className="menu__link">Войти</a>
-                  </li>
-                </ul>
-              </div>
-            </nav>
+        <S.MainNav>
+              <S.NavLogo>
+                <S.LogoImage src="img/logo.png" alt="logo" />
+              </S.NavLogo>
+              <S.NavBurger onClick={handleMenuOpen}>
+                <S.BurgerLine></S.BurgerLine>
+                <S.BurgerLine></S.BurgerLine>
+                <S.BurgerLine></S.BurgerLine>
+              </S.NavBurger>
+              {isMenuOpen ? (
+              <S.NavMenu>
+                <S.MenuList>
+                  <S.MenuItem>
+                    <S.MenuLink href="#">Главное</S.MenuLink>
+                  </S.MenuItem>
+                  <S.MenuItem>
+                    <S.MenuLink href="#">Мой плейлист</S.MenuLink>
+                  </S.MenuItem>
+                  <S.MenuItem>
+                    <S.MenuLink href="../signin.html">Войти</S.MenuLink>
+                  </S.MenuItem>
+                </S.MenuList>
+              </S.NavMenu>
+              ) : ''}
+            </S.MainNav>
     )
 }
 
