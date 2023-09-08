@@ -1,6 +1,7 @@
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Sidebar.styles';
+import { Link } from 'react-router-dom';
 
 function SideBar({ isLoading}) {
     return (
@@ -26,6 +27,7 @@ function SideBar({ isLoading}) {
             </>
           ) : (
             <>
+                  <Link to="/category/1">
                   <S.SidebarItem>
                     <S.SidebarLink href="#">
                       <S.SidebarImg
@@ -34,6 +36,8 @@ function SideBar({ isLoading}) {
                       />
                     </S.SidebarLink>
                   </S.SidebarItem>
+                  </Link>
+                  <Link to="/category/2">
                   <S.SidebarItem>
                     <S.SidebarLink href="#">
                       <S.SidebarImg
@@ -42,6 +46,8 @@ function SideBar({ isLoading}) {
                       />
                     </S.SidebarLink>
                   </S.SidebarItem>
+                  </Link>
+                  <Link to="/category/3">
                   <S.SidebarItem>
                     <S.SidebarLink href="#">
                       <S.SidebarImg
@@ -50,6 +56,7 @@ function SideBar({ isLoading}) {
                       />
                     </S.SidebarLink>
                   </S.SidebarItem>
+                  </Link>
                   </>)}
                   
                 </S.SidebarList>

@@ -1,29 +1,22 @@
-import Bar from './components/Bar/Bar';
-import Nav from './components/Nav/Nav';
-import CenterBlock from './components/CenterBlock/CenterBlock';
-import SideBar from './components/SideBar/SideBar';
 import { useEffect, useState } from 'react';
-import { GlobalStyles, AppContainer, Wrapper, Container, Main } from './App.styles.js';
+import { GlobalStyles, AppContainer, Wrapper, Container } from './App.styles.js';
+import { AppRoutes } from './Routes/routes';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 5000) 
-  }, []);
+  const [user, setUser] = useState(null);
+
+  const handleLogin = () => { 
+    setUser({ login: "taradam" }) 
+    console.log(user);
+  };
+  
   return (
     <>
     <GlobalStyles/>
     <AppContainer>
       <Wrapper>
         <Container>
-          <Main>
-            <Nav/>
-            <CenterBlock isLoading={isLoading}/>
-            <SideBar isLoading={isLoading}/>
-          </Main>
-          <Bar isLoading={isLoading}/>
+        <AppRoutes onLogin={handleLogin} user={user}/>
         </Container>
       </Wrapper>
     </AppContainer>
