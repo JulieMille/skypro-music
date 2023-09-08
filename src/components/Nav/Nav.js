@@ -28,7 +28,9 @@ function Nav() {
                     </NavLink>
                   </S.MenuItem>
                   <S.MenuItem>
+                  <NavLink to="/favorites">
                     <S.MenuLink href="#">Мой плейлист</S.MenuLink>
+                  </NavLink>
                   </S.MenuItem>
                   <S.MenuItem>
                     <S.MenuLink href="../signin.html">Войти</S.MenuLink>
