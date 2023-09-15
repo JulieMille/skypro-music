@@ -1,7 +1,15 @@
 import Track from '../Track/Track.js';
 import * as S from './Tracks.styles'
 
-function Tracks({ isLoading }) {
+function Tracks({ isLoading, realTracks, setChosenTrack }) {
+  function secondsToMinutes(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+    return `${minutes}:${formattedSeconds}`;
+}
+
+
     return (
         <S.CenterblockContent>
                 <S.ContentTitle>
@@ -15,67 +23,19 @@ function Tracks({ isLoading }) {
                   </S.Col04>
                 </S.ContentTitle>
                 <S.ContentPlaylist>
-                <Track isLoading={isLoading}
-                  track="Guilt"
-                  artist="Nero"
-                  album="Welcome Reality"
-                 time="4:44"
-                />
-                <Track isLoading={isLoading}
-                  track="Elektro"
-                  artist="Dynoro, Outwork, Mr. Gee"
-                  album="Elektro"
-                  time="2:22"
-                />
-                <Track isLoading={isLoading}
-                  track="Guilt"
-                  artist="Nero"
-                  album="Welcome Reality"
-                  time="4:44"
-                />
-                <Track isLoading={isLoading}
-                  track="Elektro"
-                  artist="Dynoro, Outwork, Mr. Gee"
-                  album="Elektro"
-                 time="2:22"
-                />
-                <Track isLoading={isLoading}
-                  track="Guilt"
-                  artist="Nero"
-                  album="Welcome Reality"
-                  time="4:44"
-                />
-                <Track isLoading={isLoading}
-                  track="Elektro"
-                  artist="Dynoro, Outwork, Mr. Gee"
-                  album="Elektro"
-                  time="2:22"
-                />
-                <Track isLoading={isLoading}
-                  track="Guilt"
-                  artist="Nero"
-                  album="Welcome Reality"
-                  time="4:44"
-                />
-                <Track isLoading={isLoading}
-                  track="Elektro"
-                  artist="Dynoro, Outwork, Mr. Gee"
-                  album="Elektro"
-                  time="2:22"
-                />
-                <Track isLoading={isLoading}
-                 track="Guilt"
-                  artist="Nero"
-                  album="Welcome Reality"
-                  time="4:44"
-                />
-                <Track isLoading={isLoading}
-                 track="Elektro"
-                  artist="Dynoro, Outwork, Mr. Gee"
-                  album="Elektro"
-                  time="2:22"
-                />
-                
+                  {
+                    realTracks.map((item) => {
+                      return <Track setChosenTrack={setChosenTrack} 
+                      item={item} 
+                      key={item.id} 
+                      isLoading={isLoading}
+                        track={item.name}
+                        artist={item.author}
+                        album={item.album}
+                        time={secondsToMinutes(item.duration_in_seconds)}
+                        />
+                    })
+                  }
                 </S.ContentPlaylist>
               </S.CenterblockContent>
     )

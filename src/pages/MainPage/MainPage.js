@@ -7,19 +7,25 @@ import { Main } from '../../App.styles';
 
 function MainPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [realTracks, setRealTracks] = useState([]);
+  const [chosenTrack, setChosenTrack] = useState(null);
+
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 5000) 
+    fetch('https://skypro-music-api.skyeng.tech/catalog/track/all/')
+      .then((response) => response.json())
+      .then((response) => setRealTracks(response))
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false))
   }, []);
   return (
     <>
     <Main>
         <Nav/>
-        <CenterBlock title={'Треки'} isLoading={isLoading}/>
+        <CenterBlock setChosenTrack={setChosenTrack} realTracks={realTracks} title={'Треки'} isLoading={isLoading}/>
         <SideBar isLoading={isLoading}/>
     </Main>
-    <Bar isLoading={isLoading}/>
+    {chosenTrack &&
+    <Bar chosenTrack={chosenTrack} isLoading={isLoading}/>}
     </>
   );
 }
