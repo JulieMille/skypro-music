@@ -2,7 +2,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Bar.styles'
 
-function Bar({ isLoading }) {
+function Bar({ isLoading, chosenTrack }) {
     return (
         <S.Bar>
             <S.BarContent>
@@ -57,10 +57,10 @@ function Bar({ isLoading }) {
                       </S.TrackPlayImg>
                       <S.TrackPlayWrapper>
                       <S.TrackPlayAuthor>
-                        <S.TrackPlayAuthorLink href="http://">Ты та...</S.TrackPlayAuthorLink>
+                        <S.TrackPlayAuthorLink href="http://">{chosenTrack.name}</S.TrackPlayAuthorLink>
                       </S.TrackPlayAuthor>
                       <S.TrackPlayAlbum>
-                        <S.TrackPlayAlbumLink href="http://">Баста</S.TrackPlayAlbumLink>
+                        <S.TrackPlayAlbumLink href="http://">{chosenTrack.author}</S.TrackPlayAlbumLink>
                       </S.TrackPlayAlbum>
                       </S.TrackPlayWrapper>
                   

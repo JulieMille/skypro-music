@@ -3,9 +3,9 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Track.styles';
 
-export default function Track({ isLoading, track, album, artist, time }) {
+export default function Track({ isLoading, track, album, artist, time, setChosenTrack, item }) {
     return (
-        <S.PlaylistItem>
+        <S.PlaylistItem onClick={() => setChosenTrack(item)} >
                     <S.PlaylistTrack>
                     {isLoading ? (
             <>
