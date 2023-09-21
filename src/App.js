@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { GlobalStyles, AppContainer, Wrapper, Container } from './App.styles.js';
 import { AppRoutes } from './Routes/routes';
 
-function App() {
+export const App = () => {
   const [user, setUser] = useState(null);
 
   const handleLogin = () => { 
@@ -23,5 +23,3 @@ function App() {
     </>
   );
 }
-
-export default App;

@@ -1,12 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
-// import { Main } from "./pages/main";
-// import { About } from "./pages/about";
-import Register from '../pages/Register/Register';
-import Login from '../pages/Login/Login';
-import MainPage from '../pages/MainPage/MainPage';
-import MyTracks from '../pages/Mytracks/MyTracks';
-import Error from '../pages/Error/Error'
-import Category from '../pages/Category/Category';
+import { Register } from '../pages/Register/Register';
+import { Login } from '../pages/Login/Login';
+import { MainPage } from '../pages/MainPage/MainPage';
+import { MyTracks } from '../pages/Mytracks/MyTracks';
+import { Error } from '../pages/Error/Error'
+import { Category } from '../pages/Category/Category';
 import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
 
 export const AppRoutes = ({user, onLogin}) => {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import * as S from './Filter.styles'
 
-function Filter() {
+export const Filter = () => {
     const [isAuthorOpen, setIsAuthorOpen] = useState(false);
     const [isYearOpen, setIsYearOpen] = useState(false);
     const [isGenreOpen, setIsGenreOpen] = useState(false);
@@ -85,5 +85,3 @@ function Filter() {
         </S.CenterblockFilter>
     )
 }
-
-export default Filter;

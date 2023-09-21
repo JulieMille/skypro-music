@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import * as S from './Register.styles'
 
-function Register() {
+export const Register = () => {
     return (
         <S.Container>
         <S.Form>
@@ -14,5 +13,3 @@ function Register() {
         </S.Container>
     )
 }
-
-export default Register;
