@@ -1,11 +1,11 @@
-import Bar from '../../components/Bar/Bar';
-import Nav from '../../components/Nav/Nav';
-import CenterBlock from '../../components/CenterBlock/CenterBlock';
+import { Bar } from '../../components/Bar/Bar';
+import { Nav } from '../../components/Nav/Nav';
+import { CenterBlock } from '../../components/CenterBlock/CenterBlock';
 import { useEffect, useState } from 'react';
 import { Main } from '../../App.styles';
 
 
-function MyTracks() {
+export const MyTracks = () => {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -22,5 +22,3 @@ function MyTracks() {
     </>
   );
 }
-
-export default MyTracks;

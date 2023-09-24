@@ -82,6 +82,8 @@ export const Wrapper = styled.div`
     overflow: hidden;
     overflow-y: scroll;
     background-color: #181818;
+    margin-left: auto;
+    margin-right: auto;
 `;
 
 export const Container = styled.div`

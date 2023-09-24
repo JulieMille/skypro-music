@@ -1,7 +1,7 @@
-import Track from '../Track/Track.js';
+import { Track } from '../Track/Track.js';
 import * as S from './Tracks.styles'
 
-function Tracks({ isLoading, realTracks, setChosenTrack }) {
+export const Tracks = ({ isLoading, realTracks, playStart }) => {
   function secondsToMinutes(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -25,7 +25,7 @@ function Tracks({ isLoading, realTracks, setChosenTrack }) {
                 <S.ContentPlaylist>
                   {
                     realTracks.map((item) => {
-                      return <Track setChosenTrack={setChosenTrack} 
+                      return <Track playStart={playStart} 
                       item={item} 
                       key={item.id} 
                       isLoading={isLoading}
@@ -40,5 +40,3 @@ function Tracks({ isLoading, realTracks, setChosenTrack }) {
               </S.CenterblockContent>
     )
 }
-
-export default Tracks;

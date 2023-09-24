@@ -1,15 +1,12 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Registration from '../Register/Register';
 import * as S from '../Login/Login.styles'
 
-function Login({onLogin}) {
+export const Login = ({onLogin}) => {
     const navigate = useNavigate();
     function handleSubmit(event) {
         event.preventDefault();
         onLogin();
         navigate('/');
-        console.log("worked");
     }
     return (
         <S.Container>
@@ -25,5 +22,3 @@ function Login({onLogin}) {
         </S.Container>
     )
 }
-
-export default Login;

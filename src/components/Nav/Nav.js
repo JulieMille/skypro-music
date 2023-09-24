@@ -4,7 +4,7 @@ import * as S from './Nav.styles';
 import { NavLink } from 'react-router-dom';
 
 
-function Nav() {
+export const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   function handleMenuOpen() {
     setIsMenuOpen(!isMenuOpen) 
@@ -41,5 +41,3 @@ function Nav() {
             </S.MainNav>
     )
 }
-
-export default Nav;

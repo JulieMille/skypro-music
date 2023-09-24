@@ -1,37 +1,73 @@
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Bar.styles'
+// import ProgressBar from "../ProgressBar";
 
-function Bar({ isLoading, chosenTrack }) {
+
+export const Bar = ({ isLoading, chosenTrack, audioRef, isPlaying, togglePlay, children, toggleLoop, isCycled, handleVolume, rangedVolume, currentTime, duration }) => {
+
+  function secondsToMinutes(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+    return `${minutes}:${formattedSeconds}`;
+  }
+
+  function timeToSeconds(timeString) {
+    if (timeString) {
+    const [minutes, seconds] = timeString.split(':').map(Number);
+    return minutes * 60 + seconds;
+    }
+  }
+
+  const handleProgressBarChange = (e) => {
+    if (audioRef.current) {
+      const newTime = (e.target.value * timeToSeconds(duration)) / 100;
+      console.log(e.target.value);
+      console.log(duration);
+      audioRef.current.currentTime = newTime;
+    }
+  };
+
     return (
+      <>
+      {children}
         <S.Bar>
             <S.BarContent>
-              <S.BarPlayerProgress></S.BarPlayerProgress>
+              <S.BarTiming>{currentTime} / {secondsToMinutes(chosenTrack.duration_in_seconds)}</S.BarTiming>
+              <S.ProgressOther style={{width: `${(timeToSeconds(currentTime) / timeToSeconds(duration)) * 100}%`}}></S.ProgressOther>
+                <S.BarPlayerProgress
+                type="range"
+                min="0"
+                max="100"
+                value={(timeToSeconds(currentTime) / timeToSeconds(duration)) * 100}
+                onChange={handleProgressBarChange}>
+                </S.BarPlayerProgress>
               <S.BarPlayerBlock>
                 <S.BarPlayer>
                   <S.BarPlayerControls>
                     <S.PlayerBtnPrev>
-                      <S.PlayerBtnPrevSvg alt="prev">
+                      <S.PlayerBtnPrevSvg onClick={() => alert("еще не реализовано")} alt="prev">
                         <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
                       </S.PlayerBtnPrevSvg>
                     </S.PlayerBtnPrev>
-                    <S.PlayerBtnPlay className="_btn">
+                    <S.PlayerBtnPlay onClick={togglePlay} className="_btn">
                       <S.PlayerBtnPlaySvg alt="play">
-                        <use xlinkHref="img/icon/sprite.svg#icon-play"></use>
+                        <use href={isPlaying ? "img/icon/sprite.svg#icon-pause" : "img/icon/sprite.svg#icon-play"}></use>
                       </S.PlayerBtnPlaySvg>
                     </S.PlayerBtnPlay>
                     <S.PlayerBtnNext>
-                      <S.PlayerBtnNextSvg alt="next">
+                      <S.PlayerBtnNextSvg onClick={() => alert("еще не реализовано")} alt="next">
                         <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
                       </S.PlayerBtnNextSvg>
                     </S.PlayerBtnNext>
-                    <S.PlayerBtnRepeat className="_btn-icon">
+                    <S.PlayerBtnRepeat onClick={toggleLoop} className="_btn-icon">
                       <S.PlayerBtnRepeatSvg alt="repeat">
-                        <use xlinkHref="img/icon/sprite.svg#icon-repeat"></use>
+                        <use href={isCycled ? "img/icon/sprite.svg#icon-repeat-active" : "img/icon/sprite.svg#icon-repeat"}></use>
                       </S.PlayerBtnRepeatSvg>
                     </S.PlayerBtnRepeat>
                     <S.PlayerBtnShuffle className="_btn-icon">
-                      <S.PlayerBtnShuffleSvg alt="shuffle">
+                      <S.PlayerBtnShuffleSvg onClick={() => alert("еще не реализовано")} alt="shuffle">
                         <use xlinkHref="img/icon/sprite.svg#icon-shuffle"></use>
                       </S.PlayerBtnShuffleSvg>
                     </S.PlayerBtnShuffle>
@@ -91,9 +127,13 @@ function Bar({ isLoading, chosenTrack }) {
                       </S.VolumeSvg>
                     </S.VolumeImg>
                     <S.VolumeProgress className="_btn">
-                      <S.VolumeProgressLine className="_btn"
+                      <S.VolumeProgressLine onChange={handleVolume} className="_btn"
                         type="range"
                         name="range"
+                        min = "0"
+                        max = "1"
+                        step = "0.1"
+                        value = {rangedVolume}
                       />
                     </S.VolumeProgress>
                   </S.VolumeContent>
@@ -101,7 +141,6 @@ function Bar({ isLoading, chosenTrack }) {
               </S.BarPlayerBlock>
             </S.BarContent>
           </S.Bar>
+          </>
     )
 }
-
-export default Bar;

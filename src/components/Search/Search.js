@@ -1,6 +1,6 @@
 import * as S from './Search.styles';
 
-function Search() {
+export const Search = () => {
     return (
         <S.CenterblockSearch>
             <S.SearchSvg>
@@ -14,5 +14,3 @@ function Search() {
         </S.CenterblockSearch>
     )
 }
-
-export default Search;

@@ -3,9 +3,9 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Track.styles';
 
-export default function Track({ isLoading, track, album, artist, time, setChosenTrack, item }) {
+export const Track = ({ isLoading, track, album, artist, time, playStart, item }) => {
     return (
-        <S.PlaylistItem onClick={() => setChosenTrack(item)} >
+        <S.PlaylistItem onClick={() => playStart(item)} >
                     <S.PlaylistTrack>
                     {isLoading ? (
             <>
@@ -23,16 +23,16 @@ export default function Track({ isLoading, track, album, artist, time, setChosen
                 </S.TrackTitleSvg>
               </S.TrackTitleImg>
               <S.TrackTitleText>
-                <S.TrackTitleLink href="http://">{track}
+                <S.TrackTitleLink href="#">{track}
                   <S.TrackTitleSpan></S.TrackTitleSpan>
                 </S.TrackTitleLink>
               </S.TrackTitleText>
             </S.TrackTitle>
             <S.TrackAuthor>
-              <S.TrackAuthorLink href="http://">{artist}</S.TrackAuthorLink>
+              <S.TrackAuthorLink href="#">{artist}</S.TrackAuthorLink>
             </S.TrackAuthor>
             <S.TrackAlbum>
-              <S.TrackAlbumLink href="http://">{album}</S.TrackAlbumLink>
+              <S.TrackAlbumLink href="#">{album}</S.TrackAlbumLink>
             </S.TrackAlbum>
             <S.TrackTime>
               <S.TrackTimeSvg alt="time">

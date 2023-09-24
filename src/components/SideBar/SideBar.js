@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Sidebar.styles';
 import { Link } from 'react-router-dom';
 
-function SideBar({ isLoading}) {
+export const SideBar = ({ isLoading}) => {
     return (
     
         <S.MainSidebar>
@@ -64,5 +64,3 @@ function SideBar({ isLoading}) {
             </S.MainSidebar>
     )
 }
-
-export default SideBar;
