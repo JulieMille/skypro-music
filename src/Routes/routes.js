@@ -6,18 +6,18 @@ import { MyTracks } from '../pages/Mytracks/MyTracks';
 import { Error } from '../pages/Error/Error'
 import { Category } from '../pages/Category/Category';
 import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
+import AuthPage from '../pages/AuthPage/AuthPage';
 
-export const AppRoutes = ({user, onLogin}) => {
+export const AppRoutes = ({user, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
   return (
     <Routes>
       
-      <Route path="/" element={<ProtectedRoute isAllowed={user?.login === 'taradam'}><MainPage/></ProtectedRoute>} />
-      <Route path="/favorites" element={<ProtectedRoute isAllowed={user?.login === 'taradam'}><MyTracks /></ProtectedRoute>} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login onLogin={onLogin}/>} />
-      <Route path="/category/:id" element={<ProtectedRoute isAllowed={user?.login === 'taradam'}><Category /></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute isAllowed={isLoggedin}><MainPage handleLogout={handleLogout}/></ProtectedRoute>} />
+      <Route path="/favorites" element={<ProtectedRoute isAllowed={isLoggedin}><MyTracks /></ProtectedRoute>} />
+      <Route path="/register" element={<AuthPage />} />
+      <Route path="/login" element={<AuthPage setIsLoggedin={setIsLoggedin} setUser={setUser} isLoginMode={true} />} />
+      <Route path="/category/:id" element={<ProtectedRoute isAllowed={isLoggedin}><Category /></ProtectedRoute>} />
       <Route path="*" element={<Error />} />
-      {/* <Route path="/about" element={<About />} /> */}
     </Routes>
   );
 };

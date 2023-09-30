@@ -2,14 +2,17 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Sidebar.styles';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../../App';
+import { useContext } from 'react';
 
-export const SideBar = ({ isLoading}) => {
+export const SideBar = ({ isLoading, handleLogout}) => {
+  const user = useContext(UserContext);
     return (
     
         <S.MainSidebar>
               <S.SidebarPersonal>
-                <S.SidebarPersonalName>Sergey.Ivanov</S.SidebarPersonalName>
-                <S.SidebarIcon>
+                <S.SidebarPersonalName>{user.username}</S.SidebarPersonalName>
+                <S.SidebarIcon onClick={handleLogout}>
                   <svg alt="logout">
                     <use xlinkHref="../../../img/icon/sprite.svg#logout"></use>
                   </svg>

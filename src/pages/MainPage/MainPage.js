@@ -5,7 +5,7 @@ import { SideBar } from '../../components/SideBar/SideBar';
 import { useEffect, useState, useRef } from 'react';
 import { Main } from '../../App.styles';
 
-export const MainPage = () => {
+export const MainPage = ({ handleLogout }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [realTracks, setRealTracks] = useState([]);
   const [chosenTrack, setChosenTrack] = useState(null);
@@ -86,9 +86,9 @@ export const MainPage = () => {
   return (
     <>
     <Main>
-        <Nav/>
+        <Nav handleLogout={handleLogout}/>
         <CenterBlock playStart={playStart} realTracks={realTracks} title={'Треки'} isLoading={isLoading}/>
-        <SideBar isLoading={isLoading}/>
+        <SideBar handleLogout={handleLogout} isLoading={isLoading}/>
     </Main>
     {chosenTrack &&
     <Bar

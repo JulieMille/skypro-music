@@ -4,7 +4,7 @@ import * as S from './Nav.styles';
 import { NavLink } from 'react-router-dom';
 
 
-export const Nav = () => {
+export const Nav = ({ handleLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   function handleMenuOpen() {
     setIsMenuOpen(!isMenuOpen) 
@@ -33,7 +33,7 @@ export const Nav = () => {
                   </NavLink>
                   </S.MenuItem>
                   <S.MenuItem>
-                    <S.MenuLink href="../signin.html">Войти</S.MenuLink>
+                    <S.MenuLink onClick={handleLogout} href="#">Выйти</S.MenuLink>
                   </S.MenuItem>
                 </S.MenuList>
               </S.NavMenu>
