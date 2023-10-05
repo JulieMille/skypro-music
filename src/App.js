@@ -8,6 +8,8 @@ export const UserContext = createContext(null);
 export const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(localStorage.getItem("user") ? true : false);
   const [user, setUser] = useState({});
+  const [realTracks, setRealTracks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -25,6 +27,16 @@ export const App = () => {
     }
   }, [])
 
+  useEffect(() => {
+    fetch('https://skypro-music-api.skyeng.tech/catalog/track/all/')
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response[0].track_file);
+        setRealTracks(response)})
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false))
+  }, []);
+
   return (
     <UserContext.Provider value={user}>
     <GlobalStyles/>
@@ -32,6 +44,8 @@ export const App = () => {
       <Wrapper>
         <Container>
         <AppRoutes 
+          realTracks={realTracks}
+          isLoading={isLoading}
           handleLogout={handleLogout} 
           setUser={setUser} 
           isLoggedin={isLoggedin}

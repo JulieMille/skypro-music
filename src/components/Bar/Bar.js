@@ -1,11 +1,12 @@
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Bar.styles'
-// import ProgressBar from "../ProgressBar";
+import { useSelector } from 'react-redux'
 
 
-export const Bar = ({ isLoading, chosenTrack, audioRef, isPlaying, togglePlay, children, toggleLoop, isCycled, handleVolume, rangedVolume, currentTime, duration }) => {
+export const Bar = ({ handlePrev, handleNext, isLoading, audioRef, isPlaying, togglePlay, children, toggleLoop, isCycled, isShuffled, handleShuffle, handleVolume, rangedVolume, currentTime, duration }) => {
 
+  const chosenTrack = useSelector((state) => state.currentTrack);
   function secondsToMinutes(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -23,8 +24,6 @@ export const Bar = ({ isLoading, chosenTrack, audioRef, isPlaying, togglePlay, c
   const handleProgressBarChange = (e) => {
     if (audioRef.current) {
       const newTime = (e.target.value * timeToSeconds(duration)) / 100;
-      console.log(e.target.value);
-      console.log(duration);
       audioRef.current.currentTime = newTime;
     }
   };
@@ -47,7 +46,7 @@ export const Bar = ({ isLoading, chosenTrack, audioRef, isPlaying, togglePlay, c
                 <S.BarPlayer>
                   <S.BarPlayerControls>
                     <S.PlayerBtnPrev>
-                      <S.PlayerBtnPrevSvg onClick={() => alert("еще не реализовано")} alt="prev">
+                      <S.PlayerBtnPrevSvg onClick={handlePrev} alt="prev">
                         <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
                       </S.PlayerBtnPrevSvg>
                     </S.PlayerBtnPrev>
@@ -57,7 +56,7 @@ export const Bar = ({ isLoading, chosenTrack, audioRef, isPlaying, togglePlay, c
                       </S.PlayerBtnPlaySvg>
                     </S.PlayerBtnPlay>
                     <S.PlayerBtnNext>
-                      <S.PlayerBtnNextSvg onClick={() => alert("еще не реализовано")} alt="next">
+                      <S.PlayerBtnNextSvg onClick={handleNext} alt="next">
                         <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
                       </S.PlayerBtnNextSvg>
                     </S.PlayerBtnNext>
@@ -67,8 +66,8 @@ export const Bar = ({ isLoading, chosenTrack, audioRef, isPlaying, togglePlay, c
                       </S.PlayerBtnRepeatSvg>
                     </S.PlayerBtnRepeat>
                     <S.PlayerBtnShuffle className="_btn-icon">
-                      <S.PlayerBtnShuffleSvg onClick={() => alert("еще не реализовано")} alt="shuffle">
-                        <use xlinkHref="img/icon/sprite.svg#icon-shuffle"></use>
+                      <S.PlayerBtnShuffleSvg onClick={handleShuffle} alt="shuffle">
+                        <use xlinkHref={isShuffled ? "img/icon/sprite.svg#icon-shuffle-active" : "img/icon/sprite.svg#icon-shuffle"}></use>
                       </S.PlayerBtnShuffleSvg>
                     </S.PlayerBtnShuffle>
                   </S.BarPlayerControls>

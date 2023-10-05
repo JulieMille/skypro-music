@@ -8,11 +8,11 @@ import { Category } from '../pages/Category/Category';
 import { ProtectedRoute } from '../components/ProtectedRoute/ProtectedRoute';
 import AuthPage from '../pages/AuthPage/AuthPage';
 
-export const AppRoutes = ({user, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
+export const AppRoutes = ({ isLoading, realTracks, user, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
   return (
     <Routes>
       
-      <Route path="/" element={<ProtectedRoute isAllowed={isLoggedin}><MainPage handleLogout={handleLogout}/></ProtectedRoute>} />
+      <Route path="/" element={<ProtectedRoute isAllowed={isLoggedin}><MainPage isLoading={isLoading} realTracks={realTracks} handleLogout={handleLogout}/></ProtectedRoute>} />
       <Route path="/favorites" element={<ProtectedRoute isAllowed={isLoggedin}><MyTracks /></ProtectedRoute>} />
       <Route path="/register" element={<AuthPage />} />
       <Route path="/login" element={<AuthPage setIsLoggedin={setIsLoggedin} setUser={setUser} isLoginMode={true} />} />

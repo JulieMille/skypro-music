@@ -1,7 +1,7 @@
 import { Track } from '../Track/Track.js';
 import * as S from './Tracks.styles'
 
-export const Tracks = ({ isLoading, realTracks, playStart }) => {
+export const Tracks = ({ isPlaying, isLoading, realTracks, playStart }) => {
   function secondsToMinutes(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -25,7 +25,9 @@ export const Tracks = ({ isLoading, realTracks, playStart }) => {
                 <S.ContentPlaylist>
                   {
                     realTracks.map((item) => {
-                      return <Track playStart={playStart} 
+                      return <Track 
+                      isPlaying={isPlaying}
+                      playStart={playStart} 
                       item={item} 
                       key={item.id} 
                       isLoading={isLoading}

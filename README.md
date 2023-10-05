@@ -72,3 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ДЗ Контекст
 предполагаемое время - 3 часа
 фактическое - 4,5 часа
+
+ДЗ Редакс
+предполагаемое время - 5 часов
+фактическое - 6 часов
