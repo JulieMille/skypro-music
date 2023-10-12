@@ -12,11 +12,11 @@ const initialState = {
           currentTrack: action.payload,
         };
       
-    //   case "TOGGLE_IS_MODAL_OPEN":
-    //     return {
-    //       ...state,
-    //       isModalOpen: !state.isModalOpen,
-    //     };
+      case "SET_PLAYLIST":
+        return {
+          ...state,
+          currentPlaylist: action.payload,
+        };
      
     //   case "RESET_ACTIVE_FLAGS":
     //     return {

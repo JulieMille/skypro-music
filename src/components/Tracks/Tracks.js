@@ -1,7 +1,7 @@
 import { Track } from '../Track/Track.js';
 import * as S from './Tracks.styles'
 
-export const Tracks = ({ isPlaying, isLoading, realTracks, playStart }) => {
+export const Tracks = ({ duration, isPlaying, isLoading, realTracks, playStart }) => {
   function secondsToMinutes(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;

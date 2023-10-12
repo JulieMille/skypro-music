@@ -4,6 +4,10 @@ export const setCurrentTrack = (payload) => {
       payload,
     };
   };
-//   export const toggleIsDialogPopupOpen = () => ({
-//     type: "TOGGLE_IS_DIALOG_POPUP_OPEN",
-//   });
+
+  export const setCurrentPlaylist = (payload) => {
+    return {
+      type: "SET_PLAYLIST",
+      payload,
+    };
+  };

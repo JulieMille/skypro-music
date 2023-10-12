@@ -7,9 +7,10 @@ import { Main } from '../../App.styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentTrack } from '../../store/actions'
 
-export const MainPage = ({ isLoading, handleLogout, realTracks }) => {
+export const MainPage = ({ isLoading, handleLogout }) => {
   // const [chosenTrack, setChosenTrack] = useState(null);
   const chosenTrack = useSelector((state) => state.currentTrack);
+  const realTracks = useSelector((state) => state.currentPlaylist);
   const dispatch = useDispatch();
   const [isAdded, setIsAdded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -47,26 +48,33 @@ export const MainPage = ({ isLoading, handleLogout, realTracks }) => {
   const handleNext = () => {
     if (chosenTrack && chosenTrack.id) {
     const foundObject = realTracks?.findIndex((obj) => obj?.id === chosenTrack?.id)
+    console.log(foundObject);
       if (isShuffled){
         playStart(realTracks[getRandomIndexFromArray(realTracks)]);
       } else {
         if (realTracks[foundObject + 1]) {
           playStart(realTracks[foundObject + 1]);
       }
-    }
+      }
     }
   }
 
   const handleCycle = () => {
     const id = +localStorage.getItem("id");
-    console.log(typeof id, id);
+    const realTracks = JSON.parse(localStorage.getItem("Tracks"));
     if (audioRef.current) {
-      const foundObject = realTracks?.findIndex((obj) => obj?.id === chosenTrack?.id)
+      // const foundObject = realTracks?.findIndex((obj) => obj?.id === chosenTrack?.id)
+      if (isShuffled) {
+        console.log("this shuffeled");
+        playStart(realTracks[getRandomIndexFromArray(realTracks)]);
+      } else {
+        console.log("this is not shuffeled");
       audioRef.current.src = realTracks[id + 1].track_file;
       audioRef.current.load();
       audioRef.current.play();
       dispatch(setCurrentTrack(realTracks[id + 1]));
       localStorage.setItem("id", id + 1);
+      }
     }
   }
 
@@ -116,6 +124,7 @@ export const MainPage = ({ isLoading, handleLogout, realTracks }) => {
     const foundObject = realTracks?.findIndex((obj) => obj?.id === item?.id)
     localStorage.setItem("id", foundObject);
     const next = chosenTrack ? item.id === chosenTrack.id : false
+    console.log("next - ", next);
     dispatch(setCurrentTrack(item));
     handleStart(next);
   }
@@ -133,8 +142,9 @@ export const MainPage = ({ isLoading, handleLogout, realTracks }) => {
   useEffect(() => {
     if (audioRef.current) {
       if (isAdded === false) {
-        audioRef.current.addEventListener("ended", handleCycle);
+        // audioRef.current.addEventListener("ended", handleCycle);
         setIsAdded(true);
+        console.log(realTracks);
       }
     }
   }, [chosenTrack])
@@ -144,7 +154,7 @@ export const MainPage = ({ isLoading, handleLogout, realTracks }) => {
     <>
     <Main>
         <Nav handleLogout={handleLogout}/>
-        <CenterBlock isPlaying={isPlaying} playStart={playStart} realTracks={realTracks} title={'Треки'} isLoading={isLoading}/>
+        <CenterBlock isPlaying={isPlaying} duration={duration} playStart={playStart} realTracks={realTracks} title={'Треки'} isLoading={isLoading}/>
         <SideBar handleLogout={handleLogout} isLoading={isLoading}/>
     </Main>
     {chosenTrack &&
@@ -164,10 +174,11 @@ export const MainPage = ({ isLoading, handleLogout, realTracks }) => {
       rangedVolume={rangedVolume}
       currentTime={currentTime}
       duration={duration}>
-        <audio onTimeUpdate={onTimeUpdate} controls ref={audioRef} style={{visibility: 'hidden'}}>
-          <source src={chosenTrack.track_file} type="audio/mpeg" />
-        </audio>
+        
       </Bar>}
+      <audio onTimeUpdate={onTimeUpdate} controls onEnded={handleCycle} ref={audioRef} style={{visibility: 'hidden'}}>
+          <source src={chosenTrack?.track_file || ''} type="audio/mpeg" />
+        </audio>
     </>
   );
 }

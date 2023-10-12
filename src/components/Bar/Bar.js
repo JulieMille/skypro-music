@@ -33,7 +33,7 @@ export const Bar = ({ handlePrev, handleNext, isLoading, audioRef, isPlaying, to
       {children}
         <S.Bar>
             <S.BarContent>
-              <S.BarTiming>{currentTime} / {secondsToMinutes(chosenTrack.duration_in_seconds)}</S.BarTiming>
+              <S.BarTiming>{currentTime} / {duration}</S.BarTiming>
               <S.ProgressOther style={{width: `${(timeToSeconds(currentTime) / timeToSeconds(duration)) * 100}%`}}></S.ProgressOther>
                 <S.BarPlayerProgress
                 type="range"

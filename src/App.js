@@ -2,12 +2,15 @@ import { useEffect, useState, createContext } from 'react';
 import { GlobalStyles, AppContainer, Wrapper, Container } from './App.styles.js';
 import { AppRoutes } from './Routes/routes';
 import { useNavigate } from 'react-router-dom';
+import { setCurrentPlaylist } from './store/actions.js';
+import { useDispatch } from 'react-redux';
 
 export const UserContext = createContext(null);
 
 export const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(localStorage.getItem("user") ? true : false);
   const [user, setUser] = useState({});
+  const dispatch = useDispatch();
   const [realTracks, setRealTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -21,7 +24,6 @@ export const App = () => {
   
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      console.log(localStorage.getItem("user"));
       setIsLoggedin(true);
       setUser(JSON.parse(localStorage.getItem("user")));
     }
@@ -32,7 +34,10 @@ export const App = () => {
       .then((response) => response.json())
       .then((response) => {
         console.log(response[0].track_file);
-        setRealTracks(response)})
+        dispatch(setCurrentPlaylist(response))
+        localStorage.setItem("Tracks", JSON.stringify(response))
+        // setRealTracks(response)
+      })
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false))
   }, []);
