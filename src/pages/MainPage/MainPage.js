@@ -4,17 +4,31 @@ import { CenterBlock } from '../../components/CenterBlock/CenterBlock';
 import { SideBar } from '../../components/SideBar/SideBar';
 import { useEffect, useState, useRef } from 'react';
 import { Main } from '../../App.styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrentTrack } from '../../store/actions'
 
-export const MainPage = ({ handleLogout }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [realTracks, setRealTracks] = useState([]);
-  const [chosenTrack, setChosenTrack] = useState(null);
+export const MainPage = ({ isLoading, handleLogout }) => {
+  // const [chosenTrack, setChosenTrack] = useState(null);
+  const chosenTrack = useSelector((state) => state.currentTrack);
+  const realTracks = useSelector((state) => state.currentPlaylist);
+  const dispatch = useDispatch();
+  const [isAdded, setIsAdded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCycled, setIsCycled] = useState(false);
-  const [rangedVolume, setRangedVolume] = useState(50);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [rangedVolume, setRangedVolume] = useState(0.1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef(null);
+
+  function getRandomIndexFromArray(array) {
+    if (Array.isArray(array) && array.length > 0) {
+      const randomIndex = Math.floor(Math.random() * array.length);
+      return randomIndex;
+    } else {
+      throw new Error('Пустой массив или не массив');
+    }
+  }
 
   const onTimeUpdate = (event) => {
     const minutes = Math.floor(event.target.currentTime / 60);
@@ -31,6 +45,54 @@ export const MainPage = ({ handleLogout }) => {
     return (new Array(length+1).join(pad)+string).slice(-length);
   }
 
+  const handleNext = () => {
+    if (chosenTrack && chosenTrack.id) {
+    const foundObject = realTracks?.findIndex((obj) => obj?.id === chosenTrack?.id)
+    console.log(foundObject);
+      if (isShuffled){
+        playStart(realTracks[getRandomIndexFromArray(realTracks)]);
+      } else {
+        if (realTracks[foundObject + 1]) {
+          playStart(realTracks[foundObject + 1]);
+      }
+      }
+    }
+  }
+
+  const handleCycle = () => {
+    const id = +localStorage.getItem("id");
+    const realTracks = JSON.parse(localStorage.getItem("Tracks"));
+    if (audioRef.current) {
+      // const foundObject = realTracks?.findIndex((obj) => obj?.id === chosenTrack?.id)
+      if (isShuffled) {
+        console.log("this shuffeled");
+        playStart(realTracks[getRandomIndexFromArray(realTracks)]);
+      } else {
+        console.log("this is not shuffeled");
+      audioRef.current.src = realTracks[id + 1].track_file;
+      audioRef.current.load();
+      audioRef.current.play();
+      dispatch(setCurrentTrack(realTracks[id + 1]));
+      localStorage.setItem("id", id + 1);
+      }
+    }
+  }
+
+  const handlePrev = () => {
+    const foundObject = realTracks.findIndex((obj) => obj.id === chosenTrack.id)
+    if (isShuffled){
+      playStart(realTracks[getRandomIndexFromArray(realTracks)]);
+    } else {
+      if (realTracks[foundObject - 1]) {
+        playStart(realTracks[foundObject - 1]);
+    }
+  }
+  }
+
+  const handleShuffle = () => {
+    setIsShuffled(!isShuffled);
+  }
+
 
   const handleStart = (next) => {
     if (audioRef.current) {
@@ -44,6 +106,7 @@ export const MainPage = ({ handleLogout }) => {
 
   const handleStop = () => {
     if (audioRef.current) {
+      audioRef.current.removeEventListener('ended', handleNext)
       audioRef.current.pause();
       setIsPlaying(false);
     }
@@ -57,9 +120,12 @@ export const MainPage = ({ handleLogout }) => {
     }
   };
 
-  const playStart = async (item) => {
+  const playStart = (item) => {
+    const foundObject = realTracks?.findIndex((obj) => obj?.id === item?.id)
+    localStorage.setItem("id", foundObject);
     const next = chosenTrack ? item.id === chosenTrack.id : false
-    await setChosenTrack(item);
+    console.log("next - ", next);
+    dispatch(setCurrentTrack(item));
     handleStart(next);
   }
 
@@ -70,43 +136,49 @@ export const MainPage = ({ handleLogout }) => {
 
   const handleVolume = (event) => {
     setRangedVolume(event.target.value);
-    console.log(rangedVolume);
     audioRef.current.volume = event.target.value;
   }
 
   useEffect(() => {
-    fetch('https://skypro-music-api.skyeng.tech/catalog/track/all/')
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response[0].track_file);
-        setRealTracks(response)})
-      .catch((error) => console.log(error))
-      .finally(() => setIsLoading(false))
-  }, []);
+    if (audioRef.current) {
+      if (isAdded === false) {
+        // audioRef.current.addEventListener("ended", handleCycle);
+        setIsAdded(true);
+        console.log(realTracks);
+      }
+    }
+  }, [chosenTrack])
+
+  
   return (
     <>
     <Main>
         <Nav handleLogout={handleLogout}/>
-        <CenterBlock playStart={playStart} realTracks={realTracks} title={'Треки'} isLoading={isLoading}/>
+        <CenterBlock isPlaying={isPlaying} duration={duration} playStart={playStart} realTracks={realTracks} title={'Треки'} isLoading={isLoading}/>
         <SideBar handleLogout={handleLogout} isLoading={isLoading}/>
     </Main>
     {chosenTrack &&
     <Bar
-      chosenTrack={chosenTrack} 
+      // chosenTrack={chosenTrack} 
       isLoading={isLoading}
+      handleNext = {handleNext}
+      handlePrev = {handlePrev}
       audioRef={audioRef}
       togglePlay={togglePlay}
       isPlaying={isPlaying}
       toggleLoop={toggleLoop}
       isCycled={isCycled}
+      isShuffled={isShuffled}
+      handleShuffle={handleShuffle}
       handleVolume={handleVolume}
       rangedVolume={rangedVolume}
       currentTime={currentTime}
       duration={duration}>
-        <audio onTimeUpdate={onTimeUpdate} controls ref={audioRef}>
-          <source src={chosenTrack.track_file} type="audio/mpeg" />
-        </audio>
+        
       </Bar>}
+      <audio onTimeUpdate={onTimeUpdate} controls onEnded={handleCycle} ref={audioRef} style={{visibility: 'hidden'}}>
+          <source src={chosenTrack?.track_file || ''} type="audio/mpeg" />
+        </audio>
     </>
   );
 }

@@ -2,8 +2,10 @@ import { useState } from 'react';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Track.styles';
+import { useSelector } from 'react-redux';
 
-export const Track = ({ isLoading, track, album, artist, time, playStart, item }) => {
+export const Track = ({ isPlaying, isLoading, track, album, artist, time, playStart, item }) => {
+  const chosenTrack = useSelector((state) => state.currentTrack);
     return (
         <S.PlaylistItem onClick={() => playStart(item)} >
                     <S.PlaylistTrack>
@@ -17,11 +19,19 @@ export const Track = ({ isLoading, track, album, artist, time, playStart, item }
           ) : (
             <>
             <S.TrackTitle>
-              <S.TrackTitleImg>
-                <S.TrackTitleSvg alt="music">
-                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-                </S.TrackTitleSvg>
-              </S.TrackTitleImg>
+            <S.TrackTitleImg>
+              {chosenTrack?.id === item?.id ? (
+              isPlaying ? (
+                <S.AnimatedDot />
+              ) : (
+                <S.TrackPlayingDot />
+              )
+            ) : (
+              <S.TrackTitleSvg alt="music">
+                <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+              </S.TrackTitleSvg>
+            )}
+            </S.TrackTitleImg>
               <S.TrackTitleText>
                 <S.TrackTitleLink href="#">{track}
                   <S.TrackTitleSpan></S.TrackTitleSpan>
