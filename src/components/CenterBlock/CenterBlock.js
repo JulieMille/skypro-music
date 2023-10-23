@@ -5,14 +5,14 @@ import * as S from './Centerblock.styles'
 import { useLocation } from 'react-router-dom';
 
 
-export const CenterBlock = ({ duration, isPlaying, isLoading, title, realTracks, playStart }) => {
+export const CenterBlock = ({ addFavorite, deleteFavorite, duration, isPlaying, isLoading, title, realTracks, handleChoice }) => {
     let location = useLocation();
     return (
         <S.MainCenterblock>
               <Search/>
               <S.CenterblockH2>{title}</S.CenterblockH2>
               {location.pathname==="/" && <Filter/>}
-              <Tracks duration={duration} isPlaying={isPlaying} playStart={playStart} realTracks={realTracks} isLoading={isLoading}/>
+              <Tracks addFavorite={addFavorite} deleteFavorite={deleteFavorite} duration={duration} isPlaying={isPlaying} handleChoice={handleChoice} realTracks={realTracks} isLoading={isLoading}/>
             </S.MainCenterblock>
     )
 }

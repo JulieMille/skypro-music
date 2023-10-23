@@ -76,3 +76,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ДЗ Редакс
 предполагаемое время - 5 часов
 фактическое - 6 часов
+
+ДЗ Редакс 2
+предполагаемое время - 5 часов
+фактическое - 12 часов

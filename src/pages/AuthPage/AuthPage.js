@@ -44,6 +44,22 @@ export default function AuthPage({ setUser, isLoginMode = false, setIsLoggedin }
   .catch((error) => console.log(error, "worked"))
   .finally(() => setIsDisabled(false))
   }
+  fetch("https://skypro-music-api.skyeng.tech/user/token/", {
+  method: "POST",
+  body: JSON.stringify({
+    email: email,
+    password: password,
+  }),
+  headers: {
+    // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+    "content-type": "application/json",
+  },
+})
+  .then((response) => response.json())
+  .then((json) => {
+    console.log(json)
+    localStorage.setItem("accessToken", json.access)
+  });
   };
 
   const validCheck = () => {

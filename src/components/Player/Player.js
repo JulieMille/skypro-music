@@ -1,40 +1,45 @@
+import * as S from "../Bar/Bar.styles"
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import * as S from './Bar.styles'
 import { useSelector } from 'react-redux'
-import { useContext } from 'react'
-import { PlayerContext } from '../../App'
+import { useContext, useState } from 'react'
+import { PlayerContext, UserContext } from '../../App'
 
+export const Player = ({ addFavorite, deleteFavorite, handlePrev, handleNext, isLoading, isPlaying, togglePlay, children, toggleLoop, isCycled, isShuffled, handleShuffle, handleVolume, rangedVolume, currentTime, duration }) => {
 
-export const Bar = ({ handlePrev, handleNext, isLoading, isPlaying, togglePlay, children, toggleLoop, isCycled, isShuffled, handleShuffle, handleVolume, rangedVolume, currentTime, duration }) => {
+    const audioRef = useContext(PlayerContext);
+    const chosenTrack = useSelector((state) => state.currentTrack);
+    const user = useContext(UserContext);
+    const favorTracks = useSelector((state) => state.favoritePlaylist);
+    const [addLiked, setAddLiked] = useState(getIsLiked());
 
-  const audioRef = useContext(PlayerContext);
-
-  const chosenTrack = useSelector((state) => state.currentTrack);
-  function secondsToMinutes(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
-    return `${minutes}:${formattedSeconds}`;
-  }
-
-  function timeToSeconds(timeString) {
-    if (timeString) {
-    const [minutes, seconds] = timeString.split(':').map(Number);
-    return minutes * 60 + seconds;
+    function getIsLiked () {
+      if (favorTracks.find(item => item.id === chosenTrack.id)) {
+        return true
+      }
+      // if (Array.isArray(chosenTrack.stared_user)) {
+      //   return chosenTrack.stared_user.some((stared_user) => stared_user.username === user.username);
+      // }
+      return false;
     }
-  }
 
-  const handleProgressBarChange = (e) => {
-    if (audioRef.current) {
-      const newTime = (e.target.value * timeToSeconds(duration)) / 100;
-      audioRef.current.currentTime = newTime;
-    }
-  };
+    function timeToSeconds(timeString) {
+        if (timeString) {
+        const [minutes, seconds] = timeString.split(':').map(Number);
+        return minutes * 60 + seconds;
+        }
+      }
+    
+      const handleProgressBarChange = (e) => {
+        if (audioRef.current) {
+          const newTime = (e.target.value * timeToSeconds(duration)) / 100;
+          audioRef.current.currentTime = newTime;
+        }
+      };
+    
 
     return (
-      <>
-      {/* {children} */}
+        <>
         <S.Bar>
             <S.BarContent>
               <S.BarTiming>{currentTime} / {duration}</S.BarTiming>
@@ -108,14 +113,18 @@ export const Bar = ({ handlePrev, handleNext, isLoading, isPlaying, togglePlay, 
                     </S.TrackPlayContain>
                     <S.TrackPlayLikeDis>
                       <S.TrackPlayLike className='_btn-icon'>
-                        <S.TrackPlayLikeSvg alt="like">
-                          <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+                        <S.TrackPlayLikeSvg onClick={() => {
+                          addFavorite(chosenTrack.id)
+                          setAddLiked(true)}} alt="like">
+                          <use xlinkHref={addLiked ? "img/icon/sprite.svg#icon-like-active" : "img/icon/sprite.svg#icon-like"}></use>
                         </S.TrackPlayLikeSvg>
                       </S.TrackPlayLike>
                       <S.TrackPlayDis className='_btn-icon'>
-                        <S.TrackPlayDisSvg alt="dislike">
+                        <S.TrackPlayDisSvg onClick={() => {
+                          deleteFavorite(chosenTrack.id)
+                          setAddLiked(false)}} alt="dislike">
                           <use
-                            xlinkHref="img/icon/sprite.svg#icon-dislike"
+                            xlinkHref={addLiked ? "img/icon/sprite.svg#icon-dislike" : "img/icon/sprite.svg#icon-dislike-active"}
                           ></use>
                         </S.TrackPlayDisSvg>
                       </S.TrackPlayDis>
@@ -144,6 +153,6 @@ export const Bar = ({ handlePrev, handleNext, isLoading, isPlaying, togglePlay, 
               </S.BarPlayerBlock>
             </S.BarContent>
           </S.Bar>
-          </>
+           </>
     )
 }

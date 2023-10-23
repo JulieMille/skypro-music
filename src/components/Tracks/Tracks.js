@@ -1,7 +1,13 @@
+import { useSelector } from 'react-redux';
 import { Track } from '../Track/Track.js';
 import * as S from './Tracks.styles'
+import { useContext } from 'react';
+import { UserContext } from '../../App.js';
 
-export const Tracks = ({ duration, isPlaying, isLoading, realTracks, playStart }) => {
+export const Tracks = ({ addFavorite, deleteFavorite, isPlaying, isLoading, realTracks, handleChoice }) => {
+
+  const user = useContext(UserContext);
+  
   function secondsToMinutes(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -9,6 +15,12 @@ export const Tracks = ({ duration, isPlaying, isLoading, realTracks, playStart }
     return `${minutes}:${formattedSeconds}`;
 }
 
+    function getIsLiked (item) {
+      if (Array.isArray(item.stared_user)) {
+        return item.stared_user.some((stared_user) => stared_user.username === user.username);
+      }
+      return false;
+    }
 
     return (
         <S.CenterblockContent>
@@ -24,10 +36,13 @@ export const Tracks = ({ duration, isPlaying, isLoading, realTracks, playStart }
                 </S.ContentTitle>
                 <S.ContentPlaylist>
                   {
-                    realTracks.map((item) => {
+                    realTracks && realTracks.map((item) => {
                       return <Track 
+                      isLiked={getIsLiked(item)}
+                      addFavorite={addFavorite} 
+                      deleteFavorite={deleteFavorite}
                       isPlaying={isPlaying}
-                      playStart={playStart} 
+                      handleChoice={handleChoice} 
                       item={item} 
                       key={item.id} 
                       isLoading={isLoading}

@@ -3,24 +3,208 @@ import { GlobalStyles, AppContainer, Wrapper, Container } from './App.styles.js'
 import { AppRoutes } from './Routes/routes';
 import { useNavigate } from 'react-router-dom';
 import { setCurrentPlaylist } from './store/actions.js';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRef } from 'react';
+import { setCurrentTrack, setFavoritePlaylist, setNowPlaylist } from './store/actions.js';
 
 export const UserContext = createContext(null);
+export const PlayerContext = createContext(null);
 
 export const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(localStorage.getItem("user") ? true : false);
   const [user, setUser] = useState({});
   const dispatch = useDispatch();
-  const [realTracks, setRealTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const audioRef = useRef(null);
+  const chosenTrack = useSelector((state) => state.currentTrack);
+  const realTracks = useSelector((state) => state.currentPlaylist);
+  const favorTracks = useSelector((state) => state.favoritePlaylist);
+  const nowTracks = useSelector((state) => state.nowPlaylist);
+
+  // const realTracks = location.pathname === "/favorites" ? useSelector((state) => state.favoritePlaylist) : useSelector((state) => state.currentPlaylist)
+  
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isCycled, setIsCycled] = useState(false);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [rangedVolume, setRangedVolume] = useState(0.1);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
     setIsLoggedin(false);
     setUser({});
     navigate("/login");
     };
+
+    function getRandomIndexFromArray(array) {
+      if (Array.isArray(array) && array.length > 0) {
+        const randomIndex = Math.floor(Math.random() * array.length);
+        return randomIndex;
+      } else {
+        throw new Error('Пустой массив или не массив');
+      }
+    }
+  
+    const onTimeUpdate = (event) => {
+      const minutes = Math.floor(event.target.currentTime / 60);
+          const seconds = Math.floor(event.target.currentTime - minutes * 60);
+          const currentTime = makeTimeString(minutes,'0',2) + ':' + makeTimeString(seconds,'0',2);
+          setCurrentTime(currentTime);
+          const durationMinutes = Math.floor(event.target.duration / 60);
+          const durationSeconds = Math.floor(event.target.duration - durationMinutes * 60);
+          const duration = makeTimeString(durationMinutes,'0',2) + ':' + makeTimeString(durationSeconds,'0',2);
+          setDuration(duration);
+    }
+  
+    const makeTimeString = (string,pad,length) => {
+      return (new Array(length+1).join(pad)+string).slice(-length);
+    }
+  
+    const handleNext = () => {
+      if (chosenTrack && chosenTrack.id) {
+      const foundObject = nowTracks?.findIndex((obj) => obj?.id === chosenTrack?.id)
+      console.log(foundObject);
+        if (isShuffled){
+          playStart(nowTracks[getRandomIndexFromArray(nowTracks)]);
+        } else {
+          if (nowTracks[foundObject + 1]) {
+            playStart(nowTracks[foundObject + 1]);
+        }
+        }
+      }
+    }
+  
+    const handleCycle = () => {
+      const id = +localStorage.getItem("id");
+      const nowTracks = JSON.parse(localStorage.getItem("Tracks"));
+      if (audioRef.current) {
+        if (isShuffled) {
+          playStart(nowTracks[getRandomIndexFromArray(nowTracks)]);
+        } else {
+        audioRef.current.src = nowTracks[id + 1].track_file;
+        audioRef.current.load();
+        audioRef.current.play();
+        dispatch(setCurrentTrack(nowTracks[id + 1]));
+        localStorage.setItem("id", id + 1);
+        }
+      }
+    }
+  
+    const handlePrev = () => {
+      const foundObject = nowTracks.findIndex((obj) => obj.id === chosenTrack.id)
+      if (isShuffled){
+        playStart(nowTracks[getRandomIndexFromArray(nowTracks)]);
+      } else {
+        if (nowTracks[foundObject - 1]) {
+          playStart(nowTracks[foundObject - 1]);
+      }
+    }
+    }
+  
+    const handleShuffle = () => {
+      setIsShuffled(!isShuffled);
+    }
+  
+  
+    const handleStart = (next) => {
+      if (audioRef.current) {
+        if(next === false) {
+        audioRef.current.load();
+        }
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    };
+  
+    const handleStop = () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('ended', handleNext)
+        audioRef.current.pause();
+        setIsPlaying(false);
+      }
+    };
+    
+    const togglePlay = () => {
+      if (isPlaying) {
+        handleStop();
+      } else {
+        handleStart();
+      }
+    };
+  
+    const handleChoice = (item) => {
+      if ((favorTracks !== nowTracks) && location.pathname === "/favorites") { 
+        dispatch(setNowPlaylist(favorTracks))
+        playStart(item)
+      }
+      else if ((favorTracks !== nowTracks) && location.pathname === "/") { 
+        dispatch(setNowPlaylist(realTracks))
+        playStart(item)}
+      else {
+        playStart(item)
+      }
+    }
+    const playStart = (item) => {
+      const foundObject = nowTracks?.findIndex((obj) => obj?.id === item?.id)
+      localStorage.setItem("id", foundObject);
+      const next = chosenTrack ? item.id === chosenTrack.id : false
+      dispatch(setCurrentTrack(item));
+      handleStart(next);
+    }
+  
+    const toggleLoop = () => {
+      audioRef.current.loop = !audioRef.current.loop
+      setIsCycled(!isCycled);
+    }
+  
+    const handleVolume = (event) => {
+      setRangedVolume(event.target.value);
+      audioRef.current.volume = event.target.value;
+    }
+
+  const addFavorite = (id) => {
+    fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  },
+})
+  .then((response) => response.json())
+  .then((json) => {
+    const foundObject = realTracks.find(item => item.id === id)
+    if (favorTracks.find(item => item.id === id)) {
+      return
+    }
+    dispatch(setFavoritePlaylist([...favorTracks, foundObject]))
+    console.log(json)
+  })
+  .catch((error) => {
+    console.log(error)
+    handleLogout()
+  })
+  }
+
+  const deleteFavorite = (id) => {
+    fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
+  method: "DELETE",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  },
+})
+  .then((response) => response.json())
+  .then((json) => {
+    dispatch(setFavoritePlaylist(favorTracks.filter(item => item.id !== id)))
+    console.log(json)
+  })
+  .catch((error) => {
+    console.log(error)
+    handleLogout()
+  })
+  }
+  
   
   useEffect(() => {
     if (localStorage.getItem("user")) {
@@ -33,32 +217,79 @@ export const App = () => {
     fetch('https://skypro-music-api.skyeng.tech/catalog/track/all/')
       .then((response) => response.json())
       .then((response) => {
-        console.log(response[0].track_file);
+        console.log(response);
         dispatch(setCurrentPlaylist(response))
         localStorage.setItem("Tracks", JSON.stringify(response))
-        // setRealTracks(response)
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error)
+          handleLogout()
+      })
       .finally(() => setIsLoading(false))
+
+    fetch("https://skypro-music-api.skyeng.tech/catalog/track/favorite/all/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+        .then((response) => {
+          if (response.status === 401) {
+            return handleLogout()
+          }
+          return response.json()
+        })
+        .then((playlist) => {
+          console.log(playlist);
+          dispatch(setFavoritePlaylist(playlist))
+          })
+        .catch((error) => {
+          console.log(error)
+          handleLogout()
+        })
   }, []);
 
   return (
     <UserContext.Provider value={user}>
+    <PlayerContext.Provider value={audioRef}>
     <GlobalStyles/>
     <AppContainer>
+        
+        <audio onTimeUpdate={onTimeUpdate} controls onEnded={handleCycle} ref={audioRef} style={{visibility: 'hidden', position: 'absolute'}}>
+          <source src={chosenTrack?.track_file || ''} type="audio/mpeg" />
+        </audio>
       <Wrapper>
         <Container>
+
         <AppRoutes 
-          realTracks={realTracks}
+          realTracks={nowTracks}
           isLoading={isLoading}
           handleLogout={handleLogout} 
           setUser={setUser} 
           isLoggedin={isLoggedin}
           setIsLoggedin={setIsLoggedin} 
-          user={user}/>
+          playStart={playStart}
+          handleChoice={handleChoice}
+          user={user}
+              handleNext = {handleNext}
+              handlePrev = {handlePrev}
+              togglePlay={togglePlay}
+              isPlaying={isPlaying}
+              toggleLoop={toggleLoop}
+              isCycled={isCycled}
+              isShuffled={isShuffled}
+              handleShuffle={handleShuffle}
+              handleVolume={handleVolume}
+              rangedVolume={rangedVolume}
+              currentTime={currentTime}
+              duration={duration}
+          addFavorite={addFavorite}
+          deleteFavorite={deleteFavorite}
+          />
         </Container>
       </Wrapper>
     </AppContainer>
+    </PlayerContext.Provider>
     </UserContext.Provider>
   );
 }

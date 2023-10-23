@@ -1,6 +1,8 @@
 const initialState = {
     currentTrack: null,
-    currentPlaylist: []
+    currentPlaylist: [],
+    favoritePlaylist: [],
+    nowPlaylist: []
     
   };
   
@@ -18,11 +20,18 @@ const initialState = {
           currentPlaylist: action.payload,
         };
      
-    //   case "RESET_ACTIVE_FLAGS":
-    //     return {
-    //       ...state,
-    //       activeRobotPart: null,
-    //     };
+      case "SET_FAVORITE_PLAYLIST":
+          return {
+            ...state,
+            favoritePlaylist: action.payload,
+        };
+
+      case "SET_NOW_PLAYLIST":
+          return {
+            ...state,
+            nowPlaylist: action.payload,
+        };
+    
   
       default:
         return state;
