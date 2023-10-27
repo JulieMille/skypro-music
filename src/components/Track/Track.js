@@ -3,11 +3,20 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import * as S from './Track.styles';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
-export const Track = ({ isPlaying, isLoading, track, album, artist, time, playStart, item }) => {
+export const Track = ({ isLiked, addFavorite, deleteFavorite, isPlaying, isLoading, track, album, artist, time, handleChoice, item }) => {
   const chosenTrack = useSelector((state) => state.currentTrack);
+  const location = useLocation()
+  const [addLiked, setAddLiked] = useState(location.pathname==="/favorites" ? true : isLiked); 
+
+  function toggleLike (id) {
+    addLiked ? deleteFavorite(id) : addFavorite(id);
+    setAddLiked((prev) => !prev);
+  }
+
     return (
-        <S.PlaylistItem onClick={() => playStart(item)} >
+        <S.PlaylistItem onClick={() => handleChoice(item)} >
                     <S.PlaylistTrack>
                     {isLoading ? (
             <>
@@ -45,8 +54,8 @@ export const Track = ({ isPlaying, isLoading, track, album, artist, time, playSt
               <S.TrackAlbumLink href="#">{album}</S.TrackAlbumLink>
             </S.TrackAlbum>
             <S.TrackTime>
-              <S.TrackTimeSvg alt="time">
-                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              <S.TrackTimeSvg onClick={() => toggleLike(item.id)} alt="time">
+                <use xlinkHref={addLiked ? "img/icon/sprite.svg#icon-like-active" : "img/icon/sprite.svg#icon-like"}></use>
               </S.TrackTimeSvg>
               <S.TrackTimeText>{time}</S.TrackTimeText>
             </S.TrackTime>
