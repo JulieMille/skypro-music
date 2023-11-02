@@ -3,7 +3,6 @@ const initialState = {
     currentPlaylist: [],
     favoritePlaylist: [],
     nowPlaylist: []
-    
   };
   
   const rootReducer = (state = initialState, action) => {
@@ -25,6 +24,24 @@ const initialState = {
             ...state,
             favoritePlaylist: action.payload,
         };
+
+      case "SET_CLASSIC_PLAYLIST":
+          return {
+            ...state,
+            classicPlaylist: action.payload,
+      };
+
+      case "SET_ROCK_PLAYLIST":
+          return {
+            ...state,
+            rockPlaylist: action.payload,
+      };
+
+      case "SET_ELECTRONIC_PLAYLIST":
+          return {
+            ...state,
+            electronicPlaylist: action.payload,
+      };
 
       case "SET_NOW_PLAYLIST":
           return {

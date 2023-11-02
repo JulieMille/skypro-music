@@ -11,6 +11,27 @@ export const setCurrentTrack = (payload) => {
       payload,
     };
   };
+  export const setClassicPlaylist = (payload) => {
+    return {
+      type: "SET_CLASSIC_PLAYLIST",
+      payload,
+    };
+  };
+
+  export const setRockPlaylist = (payload) => {
+    return {
+      type: "SET_ROCK_PLAYLIST",
+      payload,
+    };
+  };
+
+  export const setElectronicPlaylist = (payload) => {
+    return {
+      type: "SET_ELECTRONIC_PLAYLIST",
+      payload,
+    };
+  };
+
   export const setFavoritePlaylist = (payload) => {
     return {
       type: "SET_FAVORITE_PLAYLIST",

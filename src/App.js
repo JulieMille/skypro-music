@@ -2,10 +2,10 @@ import { useEffect, useState, createContext } from 'react';
 import { GlobalStyles, AppContainer, Wrapper, Container } from './App.styles.js';
 import { AppRoutes } from './Routes/routes';
 import { useNavigate } from 'react-router-dom';
-import { setCurrentPlaylist } from './store/actions.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
-import { setCurrentTrack, setFavoritePlaylist, setNowPlaylist } from './store/actions.js';
+import { setCurrentTrack, setFavoritePlaylist, setNowPlaylist, setCurrentPlaylist } from './store/actions.js';
+
 
 export const UserContext = createContext(null);
 export const PlayerContext = createContext(null);
@@ -21,15 +21,18 @@ export const App = () => {
   const realTracks = useSelector((state) => state.currentPlaylist);
   const favorTracks = useSelector((state) => state.favoritePlaylist);
   const nowTracks = useSelector((state) => state.nowPlaylist);
+  const classicTracks = useSelector((state) => state.classicPlaylist);
+  const electronicTracks = useSelector((state) => state.electronicPlaylist);
+  const rockTracks = useSelector((state) => state.rockPlaylist);
 
-  // const realTracks = location.pathname === "/favorites" ? useSelector((state) => state.favoritePlaylist) : useSelector((state) => state.currentPlaylist)
-  
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCycled, setIsCycled] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
   const [rangedVolume, setRangedVolume] = useState(0.1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isSorted, setIsSorted] = useState(false);
+  const [sortedTracks, setSortedTracks] = useState([]); 
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -138,10 +141,18 @@ export const App = () => {
     const handleChoice = (item) => {
       if ((favorTracks !== nowTracks) && location.pathname === "/favorites") { 
         dispatch(setNowPlaylist(favorTracks))
-        playStart(item)
-      }
+        playStart(item)}
       else if ((favorTracks !== nowTracks) && location.pathname === "/") { 
         dispatch(setNowPlaylist(realTracks))
+        playStart(item)}
+      else if ((classicTracks !== nowTracks) && location.pathname === "/category/1") { 
+        dispatch(setNowPlaylist(classicTracks))
+        playStart(item)}
+      else if ((electronicTracks !== nowTracks) && location.pathname === "/category/2") { 
+        dispatch(setNowPlaylist(electronicTracks))
+        playStart(item)}
+      else if ((rockTracks !== nowTracks) && location.pathname === "/category/3") { 
+        dispatch(setNowPlaylist(rockTracks))
         playStart(item)}
       else {
         playStart(item)
@@ -163,6 +174,61 @@ export const App = () => {
     const handleVolume = (event) => {
       setRangedVolume(event.target.value);
       audioRef.current.volume = event.target.value;
+    }
+
+    function sortUp() {
+      const sTracks = [...realTracks];
+      sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateA - dateB;
+      });
+      setSortedTracks(sTracks);
+      setIsSorted(true);
+    }
+
+    function sortDown() {
+      const sTracks = [...realTracks];
+      sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateB - dateA;
+      });
+      setSortedTracks(sTracks);
+      setIsSorted(true);
+    }
+
+    function sortBack() {
+      setIsSorted(false);
+        }
+
+    function filterTracksByAuthor(chosenAuthors) {
+      const filteredTracks = realTracks.filter((track) => {
+        return chosenAuthors.includes(track.author);
+      });
+        
+      setSortedTracks(filteredTracks);
+      setIsSorted(true);
+    }
+
+    function filterTracksByGenre(chosenGenres) {
+      const filteredTracks = realTracks.filter((track) => {
+        return chosenGenres.includes(track.genre);
+      });
+        
+      setSortedTracks(filteredTracks);
+      setIsSorted(true);
+    }
+
+    function searchFilter(query) {
+      const lowercaseQuery = query.toLowerCase();
+      const filteredArray = realTracks.filter((item) => {
+        const itemValue = item.name.toLowerCase();
+        return itemValue.includes(lowercaseQuery);
+      });
+    
+      setSortedTracks(filteredArray);
+      setIsSorted(true);
     }
 
   const addFavorite = (id) => {
@@ -240,7 +306,6 @@ export const App = () => {
           return response.json()
         })
         .then((playlist) => {
-          console.log(playlist);
           dispatch(setFavoritePlaylist(playlist))
           })
         .catch((error) => {
@@ -285,6 +350,13 @@ export const App = () => {
               duration={duration}
           addFavorite={addFavorite}
           deleteFavorite={deleteFavorite}
+          sortUp={sortUp}
+          sortDown={sortDown}
+          sortBack={sortBack}
+          sortedTracks={sortedTracks} isSorted={isSorted}
+          filterTracksByAuthor={filterTracksByAuthor}
+          filterTracksByGenre={filterTracksByGenre}
+          searchFilter={searchFilter}
           />
         </Container>
       </Wrapper>

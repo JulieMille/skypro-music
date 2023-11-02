@@ -1,6 +1,6 @@
 import * as S from './Search.styles';
 
-export const Search = () => {
+export const Search = ({searchFilter}) => {
     return (
         <S.CenterblockSearch>
             <S.SearchSvg>
@@ -10,6 +10,7 @@ export const Search = () => {
                 type="search"
                 placeholder="Поиск"
                 name="search"
+                onChange={(event) => searchFilter(event.target.value)}
             />
         </S.CenterblockSearch>
     )

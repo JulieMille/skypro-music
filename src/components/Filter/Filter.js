@@ -1,11 +1,49 @@
 import { useState } from 'react';
 import classNames from 'classnames';
 import * as S from './Filter.styles'
+import { useSelector } from 'react-redux';
 
-export const Filter = () => {
+export const Filter = ({filterTracksByGenre, filterTracksByAuthor, sortUp, sortDown, sortBack }) => {
     const [isAuthorOpen, setIsAuthorOpen] = useState(false);
     const [isYearOpen, setIsYearOpen] = useState(false);
     const [isGenreOpen, setIsGenreOpen] = useState(false);
+    const realTracks = useSelector((state) => state.currentPlaylist);
+    const authors = getUniqueAuthors(realTracks);
+    const genres = getUniqueGenres(realTracks);
+    const [chosenAuthors, setChosenAuthors] = useState([]);
+    const [chosenGenres, setChosenGenres] = useState([]);
+
+    function handleChosenAuhors (el) {
+        setChosenGenres([]);
+        if (chosenAuthors.includes(el)) {
+            setChosenAuthors((prev) => prev.filter((item) => item !== el))
+            const array = chosenAuthors.filter((item) => item !== el)
+            if (array.length === 0) {
+                return authors
+            } else { return array
+            }
+        } else {
+            setChosenAuthors((prev) => [...prev, el])
+            const arr = [...chosenAuthors, el]
+            return arr
+        }
+    }
+    
+    function handleChosenGenres (el) {
+        setChosenAuthors([]);
+        if (chosenGenres.includes(el)) {
+            setChosenGenres((prev) => prev.filter((item) => item !== el))
+            const array = chosenGenres.filter((item) => item !== el)
+            if (array.length === 0) {
+                return genres
+            } else { return array
+            }
+        } else {
+            setChosenGenres((prev) => [...prev, el])
+            const arr = [...chosenGenres, el]
+            return arr
+        }
+    }
 
     function handleAuthor() {
         if(isAuthorOpen) {
@@ -37,24 +75,43 @@ export const Filter = () => {
         }
     }
 
+    function getUniqueAuthors(data) {
+        const uniqueAuthors = {};
+        data.forEach((item) => {
+          const author = item.author;
+          if (author !== "-") {
+            uniqueAuthors[author] = true;
+          }
+        });
+        const uniqueAuthorsArray = Object.keys(uniqueAuthors);
+        return uniqueAuthorsArray;
+      }
+
+      function getUniqueGenres(data) {
+        const uniqueGenres = {};
+        data.forEach((item) => {
+          const genre = item.genre;
+          if (genre !== "-") {
+            uniqueGenres[genre] = true;
+          }
+        });
+        const uniqueGenresArray = Object.keys(uniqueGenres);
+        return uniqueGenresArray;
+      }
+      
     return (
         <S.CenterblockFilter>
             <S.FilterTitle>Искать по:</S.FilterTitle>
             {isAuthorOpen ? 
-            <S.FilterButtonActive className='_btn-text' onClick={handleAuthor}>исполнителю</S.FilterButtonActive> 
+            <S.FilterButtonActive className='_btn-text' onClick={handleAuthor}>
+                {(chosenAuthors.length > 0) && <S.Tbl>{chosenAuthors.length}</S.Tbl>}исполнителю</S.FilterButtonActive> 
              :  
-            <S.FilterButton className='_btn-text' onClick={handleAuthor}>исполнителю</S.FilterButton>
+            <S.FilterButton className='_btn-text' onClick={handleAuthor}>
+                {(chosenAuthors.length > 0) && <S.Tbl>{chosenAuthors.length}</S.Tbl>}исполнителю</S.FilterButton>
             }
         
             {isAuthorOpen && <S.PopupMenuAuthor>
-                <S.PopupMenuActive>Nero</S.PopupMenuActive>
-                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive> 
-                <S.PopupMenuActive>Nero</S.PopupMenuActive>
-                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive>
-                <S.PopupMenuActive>Nero</S.PopupMenuActive>
-                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive>
-                <S.PopupMenuActive>Nero</S.PopupMenuActive>
-                <S.PopupMenuActive>Dynoro, Outwork, Mr. Gee</S.PopupMenuActive>
+                {authors.map((el) => <S.PopupMenuActive onClick={() => filterTracksByAuthor(handleChosenAuhors(el))} key={Math.random()}>{el}</S.PopupMenuActive> )}
                 </S.PopupMenuAuthor>}
 
             {isYearOpen ? 
@@ -64,24 +121,36 @@ export const Filter = () => {
             }
             
             {isYearOpen && <S.PopupMenuYear>
-                <S.PopupMenuActive>1995</S.PopupMenuActive>
-                <S.PopupMenuActive>2002</S.PopupMenuActive>
-                <S.PopupMenuActive>1993</S.PopupMenuActive>
-                <S.PopupMenuActive>2000</S.PopupMenuActive>
+                <S.PopupMenuActive onClick={() => {
+                    setChosenGenres([]);
+                    setChosenAuthors([]);
+                    sortBack();
+                    setIsYearOpen(false)}}>По умолчанию</S.PopupMenuActive>
+                <S.PopupMenuActive onClick={() => {
+                    setChosenGenres([]);
+                    setChosenAuthors([]);
+                    sortDown();
+                    setIsYearOpen(false)
+                }}>Сначала новые</S.PopupMenuActive>
+                <S.PopupMenuActive onClick={() => {
+                    setChosenGenres([]);
+                    setChosenAuthors([]);
+                    sortUp();
+                    setIsYearOpen(false)
+                }}>Сначала старые</S.PopupMenuActive>
                 </S.PopupMenuYear>}
 
             {isGenreOpen ? 
-            <S.FilterButtonActive className='_btn-text' onClick={handleGenre}>жанру</S.FilterButtonActive> 
+            <S.FilterButtonActive className='_btn-text' onClick={handleGenre}>
+                {(chosenGenres.length > 0) && <S.Tbl>{chosenGenres.length}</S.Tbl>}жанру</S.FilterButtonActive> 
              :  
-            <S.FilterButton className='_btn-text' onClick={handleGenre}>жанру</S.FilterButton>
+            <S.FilterButton className='_btn-text' onClick={handleGenre}>
+                {(chosenGenres.length > 0) && <S.Tbl>{chosenGenres.length}</S.Tbl>}жанру</S.FilterButton>
             }
             
             {isGenreOpen && <S.PopupMenuGenre>
-                <S.PopupMenuActive>Рок</S.PopupMenuActive>
-                <S.PopupMenuActive>Хип-хоп</S.PopupMenuActive>
-                <S.PopupMenuActive>Поп-музыка</S.PopupMenuActive>
-                <S.PopupMenuActive>Инди</S.PopupMenuActive>
-                <S.PopupMenuActive>Техно</S.PopupMenuActive></S.PopupMenuGenre>}
+                {genres.map((el) => <S.PopupMenuActive onClick={() => filterTracksByGenre(handleChosenGenres(el))} key={Math.random()}>{el}</S.PopupMenuActive> )}
+                </S.PopupMenuGenre>}
         </S.CenterblockFilter>
     )
 }

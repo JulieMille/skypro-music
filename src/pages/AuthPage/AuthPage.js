@@ -28,9 +28,7 @@ export default function AuthPage({ setUser, isLoginMode = false, setIsLoggedin }
 })
   .then((response) => response.json())
   .then((json) => {
-    console.log(json);
-    const {detail} = json
-    console.log(detail);
+    const {detail} = json;
     if(detail) {
         setError(detail);
     }
@@ -57,7 +55,6 @@ export default function AuthPage({ setUser, isLoginMode = false, setIsLoggedin }
 })
   .then((response) => response.json())
   .then((json) => {
-    console.log(json)
     localStorage.setItem("accessToken", json.access)
   });
   };
