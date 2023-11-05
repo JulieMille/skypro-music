@@ -8,7 +8,7 @@ import AuthPage from '../pages/AuthPage/AuthPage';
 import { Layout } from '../pages/Layout/Layout';
 import { CategoryRoutes} from '../Routes/categoryRoutes';
 
-export const AppRoutes = ({searchFilter, filterTracksByGenre, filterTracksByAuthor, sortedTracks, isSorted, sortUp, sortDown, sortBack, addFavorite, deleteFavorite, handleChoice, duration, currentTime, rangedVolume, handleVolume, handleShuffle, handlePrev, handleNext, togglePlay, isPlaying, toggleLoop, isCycled, isShuffled,  playStart, isLoading, realTracks, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
+export const AppRoutes = ({setJwt, searchFilter, filterTracksByGenre, filterTracksByAuthor, sortedTracks, isSorted, sortUp, sortDown, sortBack, addFavorite, deleteFavorite, handleChoice, duration, currentTime, rangedVolume, handleVolume, handleShuffle, handlePrev, handleNext, togglePlay, isPlaying, toggleLoop, isCycled, isShuffled,  playStart, isLoading, realTracks, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
   return (
     <Routes>
       <Route path="/" element={<Layout 
@@ -45,7 +45,7 @@ export const AppRoutes = ({searchFilter, filterTracksByGenre, filterTracksByAuth
         <Route path='category/*' element={<CategoryRoutes isLoggedin={isLoggedin}  isPlaying={isPlaying} isLoading={isLoading} handleChoice={handleChoice} addFavorite={addFavorite} deleteFavorite={deleteFavorite}  />}/>
       </Route>
         <Route path="/register" element={<AuthPage />} />
-        <Route path="/login" element={<AuthPage setIsLoggedin={setIsLoggedin} setUser={setUser} isLoginMode={true} />} />
+        <Route path="/login" element={<AuthPage setJwt={setJwt} setIsLoggedin={setIsLoggedin} setUser={setUser} isLoginMode={true} />} />
         <Route path="*" element={<Error />} />
     </Routes>
   );

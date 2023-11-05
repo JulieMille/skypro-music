@@ -34,6 +34,8 @@ export const App = () => {
   const [isSorted, setIsSorted] = useState(false);
   const [sortedTracks, setSortedTracks] = useState([]); 
 
+  const [jwt, setJwt] = useState(localStorage.getItem("accessToken"));
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
@@ -117,7 +119,7 @@ export const App = () => {
         if(next === false) {
         audioRef.current.load();
         }
-        audioRef.current.play();
+        // audioRef.current.play();
         setIsPlaying(true);
       }
     };
@@ -222,12 +224,20 @@ export const App = () => {
 
     function searchFilter(query) {
       const lowercaseQuery = query.toLowerCase();
+      if (sortedTracks.length > 0) {
+        const filteredArray = sortedTracks.filter((item) => {
+          const itemValue = item.name.toLowerCase();
+          return itemValue.includes(lowercaseQuery);
+        });
+        setSortedTracks(filteredArray);
+      } else {
       const filteredArray = realTracks.filter((item) => {
         const itemValue = item.name.toLowerCase();
         return itemValue.includes(lowercaseQuery);
       });
-    
       setSortedTracks(filteredArray);
+    }
+    console.log(sortedTracks);
       setIsSorted(true);
     }
 
@@ -235,7 +245,7 @@ export const App = () => {
     fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
   method: "POST",
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    Authorization: `Bearer ${jwt}`,
   },
 })
   .then((response) => response.json())
@@ -257,7 +267,7 @@ export const App = () => {
     fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
   method: "DELETE",
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    Authorization: `Bearer ${jwt}`,
   },
 })
   .then((response) => response.json())
@@ -296,7 +306,7 @@ export const App = () => {
     fetch("https://skypro-music-api.skyeng.tech/catalog/track/favorite/all/", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${jwt}`,
         },
       })
         .then((response) => {
@@ -306,12 +316,22 @@ export const App = () => {
           return response.json()
         })
         .then((playlist) => {
+          console.log(playlist);
           dispatch(setFavoritePlaylist(playlist))
           })
         .catch((error) => {
           console.log(error)
           handleLogout()
         })
+  }, [jwt]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.addEventListener('canplaythrough', () => {
+        console.log('Аудио готово к воспроизведению без задержек');
+        audioRef.current.play();
+      });
+    }
   }, []);
 
   return (
@@ -357,6 +377,7 @@ export const App = () => {
           filterTracksByAuthor={filterTracksByAuthor}
           filterTracksByGenre={filterTracksByGenre}
           searchFilter={searchFilter}
+          setJwt={setJwt}
           />
         </Container>
       </Wrapper>
