@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import * as S from './Filter.styles'
 import { useSelector } from 'react-redux';
 
-export const Filter = ({filterTracksByGenre, filterTracksByAuthor, sortUp, sortDown, sortBack }) => {
+export const Filter = ({setBaseFilters, filterTracksByGenre, filterTracksByAuthor, sortUp, sortDown, sortBack }) => {
     const [isAuthorOpen, setIsAuthorOpen] = useState(false);
     const [isYearOpen, setIsYearOpen] = useState(false);
     const [isGenreOpen, setIsGenreOpen] = useState(false);
@@ -13,37 +13,96 @@ export const Filter = ({filterTracksByGenre, filterTracksByAuthor, sortUp, sortD
     const [chosenAuthors, setChosenAuthors] = useState([]);
     const [chosenGenres, setChosenGenres] = useState([]);
 
-    function handleChosenAuhors (el) {
-        setChosenGenres([]);
-        if (chosenAuthors.includes(el)) {
-            setChosenAuthors((prev) => prev.filter((item) => item !== el))
-            const array = chosenAuthors.filter((item) => item !== el)
-            if (array.length === 0) {
-                return authors
-            } else { return array
-            }
-        } else {
-            setChosenAuthors((prev) => [...prev, el])
-            const arr = [...chosenAuthors, el]
-            return arr
-        }
-    }
+    // function handleChosenAuhors (el) {
+        
+    //     if (chosenAuthors.includes(el)) {
+    //         setChosenAuthors((prev) => prev.filter((item) => item !== el))
+    //         const array = chosenAuthors.filter((item) => item !== el)
+    //         if (array.length === 0) {
+    //             return authors
+    //         } else { 
+    //             setBaseFilters((prev) => {
+    //                 prev.authors = array;
+    //                 return prev
+    //             })
+    //             return array
+    //         }
+    //     } else {
+    //         setChosenAuthors((prev) => [...prev, el])
+    //         const arr = [...chosenAuthors, el]
+    //         setBaseFilters((prev) => {
+    //             prev.authors = arr;
+    //             return prev
+    //         })
+    //         return arr
+    //     }
+    // }
     
-    function handleChosenGenres (el) {
-        setChosenAuthors([]);
-        if (chosenGenres.includes(el)) {
-            setChosenGenres((prev) => prev.filter((item) => item !== el))
-            const array = chosenGenres.filter((item) => item !== el)
-            if (array.length === 0) {
-                return genres
-            } else { return array
-            }
+    function handleChosenAuthors(el) {
+        if (chosenAuthors.includes(el)) {
+          const updatedChosenAuthors = chosenAuthors.filter(item => item !== el);
+          setChosenAuthors(updatedChosenAuthors);
+      
+          if (updatedChosenAuthors.length === 0) {
+            setBaseFilters(prev => {
+              return { ...prev, authors: [] };
+            });
+          } else {
+            setBaseFilters(prev => {
+              return { ...prev, authors: updatedChosenAuthors };
+            });
+          }
+      
+          return updatedChosenAuthors;
         } else {
-            setChosenGenres((prev) => [...prev, el])
-            const arr = [...chosenGenres, el]
-            return arr
+          const updatedChosenAuthors = [...chosenAuthors, el];
+          setChosenAuthors(updatedChosenAuthors);
+          setBaseFilters(prev => {
+            return { ...prev, authors: updatedChosenAuthors };
+          });
+      
+          return updatedChosenAuthors;
         }
-    }
+      }
+
+    // function handleChosenGenres (el) {
+    //     setChosenAuthors([]);
+    //     if (chosenGenres.includes(el)) {
+    //         setChosenGenres((prev) => prev.filter((item) => item !== el))
+    //         const array = chosenGenres.filter((item) => item !== el)
+    //         if (array.length === 0) {
+    //             return genres
+    //         } else { return array
+    //         }
+    //     } else {
+    //         setChosenGenres((prev) => [...prev, el])
+    //         const arr = [...chosenGenres, el]
+    //         return arr
+    //     }
+    // }
+
+    function handleChosenGenres(el) {
+        if (chosenGenres.includes(el)) {
+          const updatedChosenGenres = chosenGenres.filter(item => item !== el);
+          setChosenGenres(updatedChosenGenres);
+      
+          if (updatedChosenGenres.length === 0) {
+            setBaseFilters(prev => {
+              return { ...prev, genres: [] };
+            });
+          }
+      
+          return updatedChosenGenres;
+        } else {
+          const updatedChosenGenres = [...chosenGenres, el];
+          setChosenGenres(updatedChosenGenres);
+          setBaseFilters(prev => {
+            return { ...prev, genres: updatedChosenGenres };
+          });
+      
+          return updatedChosenGenres;
+        }
+      }
 
     function handleAuthor() {
         if(isAuthorOpen) {
@@ -111,7 +170,7 @@ export const Filter = ({filterTracksByGenre, filterTracksByAuthor, sortUp, sortD
             }
         
             {isAuthorOpen && <S.PopupMenuAuthor>
-                {authors.map((el) => <S.PopupMenuActive onClick={() => filterTracksByAuthor(handleChosenAuhors(el))} key={Math.random()}>{el}</S.PopupMenuActive> )}
+                {authors.map((el) => <S.PopupMenuActive onClick={() => filterTracksByAuthor(handleChosenAuthors(el), chosenGenres.length)} key={Math.random()}>{el}</S.PopupMenuActive> )}
                 </S.PopupMenuAuthor>}
 
             {isYearOpen ? 
@@ -122,19 +181,13 @@ export const Filter = ({filterTracksByGenre, filterTracksByAuthor, sortUp, sortD
             
             {isYearOpen && <S.PopupMenuYear>
                 <S.PopupMenuActive onClick={() => {
-                    setChosenGenres([]);
-                    setChosenAuthors([]);
                     sortBack();
                     setIsYearOpen(false)}}>По умолчанию</S.PopupMenuActive>
                 <S.PopupMenuActive onClick={() => {
-                    setChosenGenres([]);
-                    setChosenAuthors([]);
                     sortDown();
                     setIsYearOpen(false)
                 }}>Сначала новые</S.PopupMenuActive>
                 <S.PopupMenuActive onClick={() => {
-                    setChosenGenres([]);
-                    setChosenAuthors([]);
                     sortUp();
                     setIsYearOpen(false)
                 }}>Сначала старые</S.PopupMenuActive>

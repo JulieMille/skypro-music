@@ -8,7 +8,7 @@ import AuthPage from '../pages/AuthPage/AuthPage';
 import { Layout } from '../pages/Layout/Layout';
 import { CategoryRoutes} from '../Routes/categoryRoutes';
 
-export const AppRoutes = ({setJwt, searchFilter, filterTracksByGenre, filterTracksByAuthor, sortedTracks, isSorted, sortUp, sortDown, sortBack, addFavorite, deleteFavorite, handleChoice, duration, currentTime, rangedVolume, handleVolume, handleShuffle, handlePrev, handleNext, togglePlay, isPlaying, toggleLoop, isCycled, isShuffled,  playStart, isLoading, realTracks, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
+export const AppRoutes = ({setBaseFilters, setJwt, searchFilter, filterTracksByGenre, filterTracksByAuthor, sortedTracks, isSorted, sortUp, sortDown, sortBack, addFavorite, deleteFavorite, handleChoice, duration, currentTime, rangedVolume, handleVolume, handleShuffle, handlePrev, handleNext, togglePlay, isPlaying, toggleLoop, isCycled, isShuffled,  playStart, isLoading, realTracks, setUser, setIsLoggedin, isLoggedin, handleLogout}) => {
   return (
     <Routes>
       <Route path="/" element={<Layout 
@@ -29,6 +29,7 @@ export const AppRoutes = ({setJwt, searchFilter, filterTracksByGenre, filterTrac
                />}>
         <Route index element={<ProtectedRoute isAllowed={isLoggedin}><MainPage 
           searchFilter={searchFilter}
+          setBaseFilters={setBaseFilters}
           filterTracksByGenre={filterTracksByGenre}
           filterTracksByAuthor={filterTracksByAuthor}
           sortedTracks={sortedTracks} 

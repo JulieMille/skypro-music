@@ -33,8 +33,17 @@ export const App = () => {
   const [duration, setDuration] = useState(0);
   const [isSorted, setIsSorted] = useState(false);
   const [sortedTracks, setSortedTracks] = useState([]); 
+  const [baseFilters, setBaseFilters] = useState({
+    authors: [],
+    year: "",
+    genres: []
+  });
 
   const [jwt, setJwt] = useState(localStorage.getItem("accessToken"));
+
+  function handleBaseFilter () {
+
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -179,6 +188,15 @@ export const App = () => {
     }
 
     function sortUp() {
+      if (sortedTracks.length > 0) {
+        const sTracks = [...sortedTracks];
+        sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateA - dateB;
+      });
+      setSortedTracks(sTracks);
+      } else {
       const sTracks = [...realTracks];
       sTracks.sort((a, b) => {
         const dateA = new Date(a.release_date);
@@ -186,52 +204,99 @@ export const App = () => {
         return dateA - dateB;
       });
       setSortedTracks(sTracks);
+    }
       setIsSorted(true);
     }
 
     function sortDown() {
-      const sTracks = [...realTracks];
-      sTracks.sort((a, b) => {
+      if (sortedTracks.length > 0) {
+        const sTracks = [...sortedTracks];
+        sTracks.sort((a, b) => {
         const dateA = new Date(a.release_date);
         const dateB = new Date(b.release_date);
         return dateB - dateA;
       });
       setSortedTracks(sTracks);
+      } else {
+        const sTracks = [...realTracks];
+        sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateB - dateA;
+      });
+      setSortedTracks(sTracks);
+    }
       setIsSorted(true);
     }
 
     function sortBack() {
-      setIsSorted(false);
-        }
+      if (sortedTracks.length > 0) {
+            const sTracks = [...sortedTracks];
+            sTracks.sort((a, b) => a.id - b.id);
+            setSortedTracks(sTracks);
+      } else {
+            const sTracks = [...realTracks];
+            sTracks.sort((a, b) => a.id - b.id);
+            setSortedTracks(sTracks);
+      }
+          setIsSorted(true);
+      }
 
-    function filterTracksByAuthor(chosenAuthors) {
-      const filteredTracks = realTracks.filter((track) => {
-        return chosenAuthors.includes(track.author);
+    function filterTracksByAuthor(chosenAuthors, num) {
+      if ((sortedTracks.length > 0) || (num > 0)) {
+        const filteredTracks = sortedTracks.filter((track) => {
+          return chosenAuthors.includes(track.author);
+        });
+        console.log(filterByBaseFilters());
+      } else {
+        const filteredTracks = realTracks.filter((track) => {
+          return chosenAuthors.includes(track.author);
       });
-        
-      setSortedTracks(filteredTracks);
+      console.log(filterByBaseFilters());
+      }
       setIsSorted(true);
+      console.log(baseFilters);
+    }
+
+    useEffect(() => {
+      setSortedTracks(filterByBaseFilters())
+      console.log(filterByBaseFilters());
+    }, [JSON.stringify(baseFilters), isSorted])
+
+    function filterByBaseFilters() {
+      return realTracks.filter(item => {
+        const authorFilters = baseFilters.authors;
+        if (authorFilters.length > 0 && !authorFilters.some(authorFilter => item.author.includes(authorFilter))) {
+          return false;
+        }
+        const genreFilters = baseFilters.genres;
+        if (genreFilters.length > 0 && !genreFilters.some(genreFilter => item.genre.includes(genreFilter))) {
+          return false;
+        }
+        return true;
+      });
+      
     }
 
     function filterTracksByGenre(chosenGenres) {
       const filteredTracks = realTracks.filter((track) => {
         return chosenGenres.includes(track.genre);
       });
-        
-      setSortedTracks(filteredTracks);
       setIsSorted(true);
     }
+
+    
 
     function searchFilter(query) {
       const lowercaseQuery = query.toLowerCase();
       if (sortedTracks.length > 0) {
-        const filteredArray = sortedTracks.filter((item) => {
+        const filteredArray = filterByBaseFilters().filter((item) => {
           const itemValue = item.name.toLowerCase();
           return itemValue.includes(lowercaseQuery);
         });
         setSortedTracks(filteredArray);
       } else {
-      const filteredArray = realTracks.filter((item) => {
+        const filteredArray = realTracks.filter((item) => {
         const itemValue = item.name.toLowerCase();
         return itemValue.includes(lowercaseQuery);
       });
@@ -378,6 +443,7 @@ export const App = () => {
           filterTracksByGenre={filterTracksByGenre}
           searchFilter={searchFilter}
           setJwt={setJwt}
+          setBaseFilters={setBaseFilters}
           />
         </Container>
       </Wrapper>

@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import { Main } from '../../App.styles';
 import { useSelector, useDispatch } from 'react-redux';
 
-export const MainPage = ({searchFilter, filterTracksByGenre, filterTracksByAuthor, sortedTracks, isSorted, sortUp, sortDown, sortBack, addFavorite, deleteFavorite, isLoading, handleLogout, handleChoice }) => {
+export const MainPage = ({setBaseFilters, searchFilter, filterTracksByGenre, filterTracksByAuthor, sortedTracks, isSorted, sortUp, sortDown, sortBack, addFavorite, deleteFavorite, isLoading, handleLogout, handleChoice }) => {
   const realTracks = useSelector((state) => state.currentPlaylist);
   const dispatch = useDispatch();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -25,6 +25,7 @@ export const MainPage = ({searchFilter, filterTracksByGenre, filterTracksByAutho
     <Main>
         <Nav handleLogout={handleLogout}/>
         <CenterBlock 
+          setBaseFilters={setBaseFilters}
           searchFilter={searchFilter}
           filterTracksByGenre={filterTracksByGenre}
           filterTracksByAuthor={filterTracksByAuthor}
