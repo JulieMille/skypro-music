@@ -3,7 +3,7 @@ import * as S from "./AuthPage.styles";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from '../../App'
 
-export default function AuthPage({ setUser, isLoginMode = false, setIsLoggedin }) {
+export default function AuthPage({ setJwt, setUser, isLoginMode = false, setIsLoggedin }) {
   const [error, setError] = useState(null);
   const user = useContext(UserContext);
   const [email, setEmail] = useState("");
@@ -28,9 +28,7 @@ export default function AuthPage({ setUser, isLoginMode = false, setIsLoggedin }
 })
   .then((response) => response.json())
   .then((json) => {
-    console.log(json);
-    const {detail} = json
-    console.log(detail);
+    const {detail} = json;
     if(detail) {
         setError(detail);
     }
@@ -51,14 +49,13 @@ export default function AuthPage({ setUser, isLoginMode = false, setIsLoggedin }
     password: password,
   }),
   headers: {
-    // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
     "content-type": "application/json",
   },
 })
   .then((response) => response.json())
   .then((json) => {
-    console.log(json)
     localStorage.setItem("accessToken", json.access)
+    setJwt(json.access)
   });
   };
 

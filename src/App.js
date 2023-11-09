@@ -2,10 +2,10 @@ import { useEffect, useState, createContext } from 'react';
 import { GlobalStyles, AppContainer, Wrapper, Container } from './App.styles.js';
 import { AppRoutes } from './Routes/routes';
 import { useNavigate } from 'react-router-dom';
-import { setCurrentPlaylist } from './store/actions.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
-import { setCurrentTrack, setFavoritePlaylist, setNowPlaylist } from './store/actions.js';
+import { setCurrentTrack, setFavoritePlaylist, setNowPlaylist, setCurrentPlaylist } from './store/actions.js';
+
 
 export const UserContext = createContext(null);
 export const PlayerContext = createContext(null);
@@ -21,15 +21,29 @@ export const App = () => {
   const realTracks = useSelector((state) => state.currentPlaylist);
   const favorTracks = useSelector((state) => state.favoritePlaylist);
   const nowTracks = useSelector((state) => state.nowPlaylist);
+  const classicTracks = useSelector((state) => state.classicPlaylist);
+  const electronicTracks = useSelector((state) => state.electronicPlaylist);
+  const rockTracks = useSelector((state) => state.rockPlaylist);
 
-  // const realTracks = location.pathname === "/favorites" ? useSelector((state) => state.favoritePlaylist) : useSelector((state) => state.currentPlaylist)
-  
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCycled, setIsCycled] = useState(false);
   const [isShuffled, setIsShuffled] = useState(false);
   const [rangedVolume, setRangedVolume] = useState(0.1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isSorted, setIsSorted] = useState(false);
+  const [sortedTracks, setSortedTracks] = useState([]); 
+  const [baseFilters, setBaseFilters] = useState({
+    authors: [],
+    year: "",
+    genres: []
+  });
+
+  const [jwt, setJwt] = useState(localStorage.getItem("accessToken"));
+
+  function handleBaseFilter () {
+
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -114,7 +128,7 @@ export const App = () => {
         if(next === false) {
         audioRef.current.load();
         }
-        audioRef.current.play();
+        // audioRef.current.play();
         setIsPlaying(true);
       }
     };
@@ -138,10 +152,18 @@ export const App = () => {
     const handleChoice = (item) => {
       if ((favorTracks !== nowTracks) && location.pathname === "/favorites") { 
         dispatch(setNowPlaylist(favorTracks))
-        playStart(item)
-      }
+        playStart(item)}
       else if ((favorTracks !== nowTracks) && location.pathname === "/") { 
         dispatch(setNowPlaylist(realTracks))
+        playStart(item)}
+      else if ((classicTracks !== nowTracks) && location.pathname === "/category/1") { 
+        dispatch(setNowPlaylist(classicTracks))
+        playStart(item)}
+      else if ((electronicTracks !== nowTracks) && location.pathname === "/category/2") { 
+        dispatch(setNowPlaylist(electronicTracks))
+        playStart(item)}
+      else if ((rockTracks !== nowTracks) && location.pathname === "/category/3") { 
+        dispatch(setNowPlaylist(rockTracks))
         playStart(item)}
       else {
         playStart(item)
@@ -165,11 +187,130 @@ export const App = () => {
       audioRef.current.volume = event.target.value;
     }
 
+    function sortUp() {
+      if (sortedTracks.length > 0) {
+        const sTracks = [...sortedTracks];
+        sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateA - dateB;
+      });
+      setSortedTracks(sTracks);
+      } else {
+      const sTracks = [...realTracks];
+      sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateA - dateB;
+      });
+      setSortedTracks(sTracks);
+    }
+      setIsSorted(true);
+    }
+
+    function sortDown() {
+      if (sortedTracks.length > 0) {
+        const sTracks = [...sortedTracks];
+        sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateB - dateA;
+      });
+      setSortedTracks(sTracks);
+      } else {
+        const sTracks = [...realTracks];
+        sTracks.sort((a, b) => {
+        const dateA = new Date(a.release_date);
+        const dateB = new Date(b.release_date);
+        return dateB - dateA;
+      });
+      setSortedTracks(sTracks);
+    }
+      setIsSorted(true);
+    }
+
+    function sortBack() {
+      if (sortedTracks.length > 0) {
+            const sTracks = [...sortedTracks];
+            sTracks.sort((a, b) => a.id - b.id);
+            setSortedTracks(sTracks);
+      } else {
+            const sTracks = [...realTracks];
+            sTracks.sort((a, b) => a.id - b.id);
+            setSortedTracks(sTracks);
+      }
+          setIsSorted(true);
+      }
+
+    function filterTracksByAuthor(chosenAuthors, num) {
+      if ((sortedTracks.length > 0) || (num > 0)) {
+        const filteredTracks = sortedTracks.filter((track) => {
+          return chosenAuthors.includes(track.author);
+        });
+        console.log(filterByBaseFilters());
+      } else {
+        const filteredTracks = realTracks.filter((track) => {
+          return chosenAuthors.includes(track.author);
+      });
+      console.log(filterByBaseFilters());
+      }
+      setIsSorted(true);
+      console.log(baseFilters);
+    }
+
+    useEffect(() => {
+      setSortedTracks(filterByBaseFilters())
+      console.log(filterByBaseFilters());
+    }, [JSON.stringify(baseFilters), isSorted])
+
+    function filterByBaseFilters() {
+      return realTracks.filter(item => {
+        const authorFilters = baseFilters.authors;
+        if (authorFilters.length > 0 && !authorFilters.some(authorFilter => item.author.includes(authorFilter))) {
+          return false;
+        }
+        const genreFilters = baseFilters.genres;
+        if (genreFilters.length > 0 && !genreFilters.some(genreFilter => item.genre.includes(genreFilter))) {
+          return false;
+        }
+        return true;
+      });
+      
+    }
+
+    function filterTracksByGenre(chosenGenres) {
+      const filteredTracks = realTracks.filter((track) => {
+        return chosenGenres.includes(track.genre);
+      });
+      setIsSorted(true);
+    }
+
+    
+
+    function searchFilter(query) {
+      const lowercaseQuery = query.toLowerCase();
+      if (sortedTracks.length > 0) {
+        const filteredArray = filterByBaseFilters().filter((item) => {
+          const itemValue = item.name.toLowerCase();
+          return itemValue.includes(lowercaseQuery);
+        });
+        setSortedTracks(filteredArray);
+      } else {
+        const filteredArray = realTracks.filter((item) => {
+        const itemValue = item.name.toLowerCase();
+        return itemValue.includes(lowercaseQuery);
+      });
+      setSortedTracks(filteredArray);
+    }
+    console.log(sortedTracks);
+      setIsSorted(true);
+    }
+
   const addFavorite = (id) => {
     fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
   method: "POST",
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    Authorization: `Bearer ${jwt}`,
   },
 })
   .then((response) => response.json())
@@ -191,7 +332,7 @@ export const App = () => {
     fetch(`https://skypro-music-api.skyeng.tech/catalog/track/${id}/favorite/`, {
   method: "DELETE",
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    Authorization: `Bearer ${jwt}`,
   },
 })
   .then((response) => response.json())
@@ -230,7 +371,7 @@ export const App = () => {
     fetch("https://skypro-music-api.skyeng.tech/catalog/track/favorite/all/", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${jwt}`,
         },
       })
         .then((response) => {
@@ -247,6 +388,15 @@ export const App = () => {
           console.log(error)
           handleLogout()
         })
+  }, [jwt]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.addEventListener('canplaythrough', () => {
+        console.log('Аудио готово к воспроизведению без задержек');
+        audioRef.current.play();
+      });
+    }
   }, []);
 
   return (
@@ -285,6 +435,15 @@ export const App = () => {
               duration={duration}
           addFavorite={addFavorite}
           deleteFavorite={deleteFavorite}
+          sortUp={sortUp}
+          sortDown={sortDown}
+          sortBack={sortBack}
+          sortedTracks={sortedTracks} isSorted={isSorted}
+          filterTracksByAuthor={filterTracksByAuthor}
+          filterTracksByGenre={filterTracksByGenre}
+          searchFilter={searchFilter}
+          setJwt={setJwt}
+          setBaseFilters={setBaseFilters}
           />
         </Container>
       </Wrapper>

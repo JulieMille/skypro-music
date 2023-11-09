@@ -16,7 +16,9 @@ export const Track = ({ isLiked, addFavorite, deleteFavorite, isPlaying, isLoadi
   }
 
     return (
-        <S.PlaylistItem onClick={() => handleChoice(item)} >
+        <S.PlaylistItem onClick={() => {
+          console.log(handleChoice);
+          handleChoice(item)}} >
                     <S.PlaylistTrack>
                     {isLoading ? (
             <>
@@ -37,7 +39,7 @@ export const Track = ({ isLiked, addFavorite, deleteFavorite, isPlaying, isLoadi
               )
             ) : (
               <S.TrackTitleSvg alt="music">
-                <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                <use xlinkHref="../img/icon/sprite.svg#icon-note"></use>
               </S.TrackTitleSvg>
             )}
             </S.TrackTitleImg>
@@ -54,7 +56,9 @@ export const Track = ({ isLiked, addFavorite, deleteFavorite, isPlaying, isLoadi
               <S.TrackAlbumLink href="#">{album}</S.TrackAlbumLink>
             </S.TrackAlbum>
             <S.TrackTime>
-              <S.TrackTimeSvg onClick={() => toggleLike(item.id)} alt="time">
+              <S.TrackTimeSvg onClick={(event) => {
+                event.stopPropagation()
+                toggleLike(item.id)}} alt="time">
                 <use xlinkHref={addLiked ? "img/icon/sprite.svg#icon-like-active" : "img/icon/sprite.svg#icon-like"}></use>
               </S.TrackTimeSvg>
               <S.TrackTimeText>{time}</S.TrackTimeText>

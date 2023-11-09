@@ -31,7 +31,7 @@ export const PopupMenu = styled.ul`
     padding: 34px;
     gap: 10px;
     width: 248px;
-    height: 305px;
+    height: 225px;
     border-radius: 12px;
     background: #313131;
     top: 41px;
@@ -73,10 +73,12 @@ export const PopupMenuActive = styled.li`
     &:hover {
         color: #B672FF;
         text-decoration-line: underline;
+        cursor: pointer;
       }
 `
 
 export const FilterButton = styled.div`
+    position: relative;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -93,4 +95,18 @@ export const FilterButton = styled.div`
 export const FilterButtonActive = styled(FilterButton)`
     border: 1px solid #AD61FF;
     color: #AD61FF;
+`
+
+export const Tbl = styled.div`
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    background-color: #AD61FF;
+    position: absolute;
+    top: -13px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
 `

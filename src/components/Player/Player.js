@@ -17,9 +17,6 @@ export const Player = ({ addFavorite, deleteFavorite, handlePrev, handleNext, is
       if (favorTracks.find(item => item.id === chosenTrack.id)) {
         return true
       }
-      // if (Array.isArray(chosenTrack.stared_user)) {
-      //   return chosenTrack.stared_user.some((stared_user) => stared_user.username === user.username);
-      // }
       return false;
     }
 
@@ -56,27 +53,28 @@ export const Player = ({ addFavorite, deleteFavorite, handlePrev, handleNext, is
                   <S.BarPlayerControls>
                     <S.PlayerBtnPrev>
                       <S.PlayerBtnPrevSvg onClick={handlePrev} alt="prev">
-                        <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
+                        <use xlinkHref="../img/icon/sprite.svg#icon-prev"></use>
                       </S.PlayerBtnPrevSvg>
                     </S.PlayerBtnPrev>
                     <S.PlayerBtnPlay onClick={togglePlay} className="_btn">
+                      {/* <img src="img/icon/play.svg"></img> */}
                       <S.PlayerBtnPlaySvg alt="play">
-                        <use href={isPlaying ? "img/icon/sprite.svg#icon-pause" : "img/icon/sprite.svg#icon-play"}></use>
+                        <use href={isPlaying ? "../img/icon/sprite.svg#icon-pause" : "../img/icon/sprite.svg#icon-play"}></use>
                       </S.PlayerBtnPlaySvg>
                     </S.PlayerBtnPlay>
                     <S.PlayerBtnNext>
                       <S.PlayerBtnNextSvg onClick={handleNext} alt="next">
-                        <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
+                        <use xlinkHref="../img/icon/sprite.svg#icon-next"></use>
                       </S.PlayerBtnNextSvg>
                     </S.PlayerBtnNext>
                     <S.PlayerBtnRepeat onClick={toggleLoop} className="_btn-icon">
                       <S.PlayerBtnRepeatSvg alt="repeat">
-                        <use href={isCycled ? "img/icon/sprite.svg#icon-repeat-active" : "img/icon/sprite.svg#icon-repeat"}></use>
+                        <use href={isCycled ? "../img/icon/sprite.svg#icon-repeat-active" : "../img/icon/sprite.svg#icon-repeat"}></use>
                       </S.PlayerBtnRepeatSvg>
                     </S.PlayerBtnRepeat>
                     <S.PlayerBtnShuffle className="_btn-icon">
                       <S.PlayerBtnShuffleSvg onClick={handleShuffle} alt="shuffle">
-                        <use xlinkHref={isShuffled ? "img/icon/sprite.svg#icon-shuffle-active" : "img/icon/sprite.svg#icon-shuffle"}></use>
+                        <use xlinkHref={isShuffled ? "../img/icon/sprite.svg#icon-shuffle-active" : "../img/icon/sprite.svg#icon-shuffle"}></use>
                       </S.PlayerBtnShuffleSvg>
                     </S.PlayerBtnShuffle>
                   </S.BarPlayerControls>
@@ -96,7 +94,7 @@ export const Player = ({ addFavorite, deleteFavorite, handlePrev, handleNext, is
             <>
                       <S.TrackPlayImg>
                         <S.TrackPlaySvg alt="music">
-                          <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                          <use xlinkHref="../img/icon/sprite.svg#icon-note"></use>
                         </S.TrackPlaySvg>
                       </S.TrackPlayImg>
                       <S.TrackPlayWrapper>
@@ -116,7 +114,7 @@ export const Player = ({ addFavorite, deleteFavorite, handlePrev, handleNext, is
                         <S.TrackPlayLikeSvg onClick={() => {
                           addFavorite(chosenTrack.id)
                           setAddLiked(true)}} alt="like">
-                          <use xlinkHref={addLiked ? "img/icon/sprite.svg#icon-like-active" : "img/icon/sprite.svg#icon-like"}></use>
+                          <use xlinkHref={addLiked ? "../img/icon/sprite.svg#icon-like-active" : "../img/icon/sprite.svg#icon-like"}></use>
                         </S.TrackPlayLikeSvg>
                       </S.TrackPlayLike>
                       <S.TrackPlayDis className='_btn-icon'>
@@ -124,7 +122,7 @@ export const Player = ({ addFavorite, deleteFavorite, handlePrev, handleNext, is
                           deleteFavorite(chosenTrack.id)
                           setAddLiked(false)}} alt="dislike">
                           <use
-                            xlinkHref={addLiked ? "img/icon/sprite.svg#icon-dislike" : "img/icon/sprite.svg#icon-dislike-active"}
+                            xlinkHref={addLiked ? "../img/icon/sprite.svg#icon-dislike" : "../img/icon/sprite.svg#icon-dislike-active"}
                           ></use>
                         </S.TrackPlayDisSvg>
                       </S.TrackPlayDis>
